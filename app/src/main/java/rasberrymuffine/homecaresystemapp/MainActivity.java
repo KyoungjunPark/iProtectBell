@@ -9,6 +9,10 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+/**
+ * Created by 예림 on 2015-09-09.
+ */
+public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         Toast.makeText(this,serialNum+"" , Toast.LENGTH_LONG).show();
     }
-
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

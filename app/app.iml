@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <module external.linked.project.id=":app" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$/.." external.system.id="GRADLE" external.system.module.group="And" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
+=======
+<module external.linked.project.id=":app" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$/.." external.system.id="GRADLE" external.system.module.group="iprotectbell" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
+>>>>>>> 0e71ff428358e24f493587ebd790e506b773c3fe
   <component name="FacetManager">
     <facet type="android-gradle" name="Android-Gradle">
       <configuration>
