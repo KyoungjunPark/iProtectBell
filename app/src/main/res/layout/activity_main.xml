@@ -5,53 +5,65 @@
 
     <VideoView
         android:id="@+id/videoView"
-        android:layout_height="wrap_content"
+        android:layout_height="250dp"
         android:layout_width="wrap_content"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:layout_marginTop="40dp"
-        android:layout_marginBottom="300dp"
+
         />
-    <Switch
-        android:id="@+id/openButton"
-        android:layout_width="wrap_content"
+    <RelativeLayout
         android:layout_height="wrap_content"
-        android:text=""
-        android:layout_alignBottom="@+id/logButton"
-        android:layout_alignLeft="@+id/speakButton"
-        android:layout_alignStart="@+id/speakButton"
-        android:layout_alignRight="@+id/speakButton"
-        android:layout_alignEnd="@+id/speakButton" />
-    <Button
-        android:id="@+id/logButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Log보기"
-        android:layout_below="@+id/speakButton"
-        android:layout_alignLeft="@+id/callButton"
-        android:layout_alignStart="@+id/callButton" />
-    <Button
-        android:id="@+id/settingButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="환경설정"
-        />
-    <Button
-        android:id="@+id/speakButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="음성"
-        android:layout_alignTop="@+id/callButton"
-        android:layout_centerHorizontal="true" />
-    <Button
-        android:id="@+id/callButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="신고"
-        android:layout_above="@+id/settingButton"
-        android:layout_alignLeft="@+id/videoView"
-        android:layout_alignStart="@+id/videoView"
-        android:layout_marginBottom="129dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/videoView"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        >
+        <Button
+            android:id="@+id/callButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="20dp"
+            android:text="신고"
+            android:drawableRight="@drawable/siren"
+            />
+        <Button
+            android:id="@+id/speakButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_toRightOf="@+id/callButton"
+            android:text="음성"
+            android:drawableRight="@drawable/sound"
+            />
+        <TextView
+            android:id="@+id/doorText"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Door"
+            android:layout_marginRight="5dp"
+            android:layout_below="@+id/callButton"
+            android:layout_alignLeft="@+id/callButton"
+            />
+        <Switch
+            android:id="@+id/openButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/callButton"
+            android:layout_alignRight="@+id/callButton"
+            android:layout_alignEnd="@+id/callButton"
+            android:layout_toRightOf="@+id/doorText"
+            />
+        <Button
+            android:id="@+id/logButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log  "
+            android:layout_below="@+id/speakButton"
+            android:layout_alignRight="@+id/speakButton"
+            android:drawableRight="@drawable/log"
+            />
+    </RelativeLayout>
 </RelativeLayout>
