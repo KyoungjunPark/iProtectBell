@@ -51,11 +51,14 @@
             android:id="@+id/openButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/callButton"
+            android:textSize="5dp"
+            android:textOff="닫힘"
+            android:textOn="열림"
+            android:layout_below="@+id/doorText"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_alignRight="@+id/callButton"
-            android:layout_alignEnd="@+id/callButton"
-            android:layout_toRightOf="@+id/doorText"
-            />
+            android:layout_alignEnd="@+id/callButton" />
         <Button
             android:id="@+id/logButton"
             android:layout_width="wrap_content"
