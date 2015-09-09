@@ -12,10 +12,46 @@
         android:layout_marginTop="40dp"
         android:layout_marginBottom="300dp"
         />
+    <Switch
+        android:id="@+id/openButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_alignBottom="@+id/logButton"
+        android:layout_alignLeft="@+id/speakButton"
+        android:layout_alignStart="@+id/speakButton"
+        android:layout_alignRight="@+id/speakButton"
+        android:layout_alignEnd="@+id/speakButton" />
+    <Button
+        android:id="@+id/logButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log보기"
+        android:layout_below="@+id/speakButton"
+        android:layout_alignLeft="@+id/callButton"
+        android:layout_alignStart="@+id/callButton" />
+    <Button
+        android:id="@+id/settingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="환경설정"
+        />
+    <Button
+        android:id="@+id/speakButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="음성"
+        android:layout_alignTop="@+id/callButton"
+        android:layout_centerHorizontal="true" />
     <Button
         android:id="@+id/callButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        
-        />
+        android:text="신고"
+        android:layout_above="@+id/settingButton"
+        android:layout_alignLeft="@+id/videoView"
+        android:layout_alignStart="@+id/videoView"
+        android:layout_marginBottom="129dp" />
 </RelativeLayout>
