@@ -56,8 +56,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 checkDoorState(isChecked);
+
             }
         });
+
     }
     private void checkDoorState(boolean isChecked)  {
         if(isChecked){
