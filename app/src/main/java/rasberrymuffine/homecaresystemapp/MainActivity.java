@@ -9,8 +9,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.MediaController;
 import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -24,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public static final int REQUEST_CODE_SETTING = 1003;
 
-    VideoView videoView;
+    WebView videoView;
     Button callButton;
     Button speakButton;
     Button logButton;
@@ -41,7 +43,10 @@ public class MainActivity extends AppCompatActivity {
 
         Toast.makeText(this,serialNum+"" , LENGTH_LONG).show();
 
-        videoView = (VideoView)findViewById(R.id.videoView);
+        videoView = (WebView)findViewById(R.id.videoView);
+        videoView.getSettings().setJavaScriptEnabled(true);
+        videoView.loadUrl("http://165.194.104.19:8080/stream");
+
         callButton = (Button)findViewById(R.id.callButton);
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
