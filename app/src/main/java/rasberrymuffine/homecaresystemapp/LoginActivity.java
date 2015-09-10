@@ -31,14 +31,14 @@ public class LoginActivity extends AppCompatActivity {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // user에게 시리얼 넘버 입력받음
                 serialNum = inputSerialNum.getText().toString();
 
                 Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                intent.putExtra("serialNum",serialNum);
+                intent.putExtra("serialNum", "서버한테 정보 받아오기");
+                    startActivityForResult(intent, REQUEST_CODE_MAIN);
+                    finish();
 
-                startActivityForResult(intent, REQUEST_CODE_MAIN);
-
-                finish();
             }
         });
         joinButton = (Button)findViewById(R.id.joinButton);
@@ -54,8 +54,36 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+
+    private boolean getPermission(String serialNum){
+        return true;
+    }
+    private void getUserInfo(Intent intent){
+        intent.putExtra("serialNum", "서버한테 정보 받아오기");
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }
