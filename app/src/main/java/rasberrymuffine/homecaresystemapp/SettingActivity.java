@@ -14,7 +14,7 @@ public class SettingActivity  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        Intent fromLoginIntent = getIntent();
+        Intent fromMainIntent = getIntent();
 
 
     }

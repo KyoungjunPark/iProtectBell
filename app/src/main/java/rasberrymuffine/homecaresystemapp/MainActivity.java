@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Created by 예림 on 2015-09-09.
      */
+    public static final int REQUEST_CODE_SETTING = 1003;
+
     VideoView videoView;
     Button callButton;
     Button speakButton;
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent = new Intent(getApplicationContext(),SettingActivity.class);
+            startActivityForResult(intent, REQUEST_CODE_SETTING);
 
             return true;
         }
