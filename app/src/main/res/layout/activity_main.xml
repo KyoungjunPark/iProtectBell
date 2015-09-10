@@ -43,7 +43,6 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:text="Door"
-            android:layout_marginRight="5dp"
             android:layout_below="@+id/callButton"
             android:layout_alignLeft="@+id/callButton"
             />
@@ -58,7 +57,8 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignRight="@+id/callButton"
-            android:layout_alignEnd="@+id/callButton" />
+            android:layout_alignEnd="@+id/callButton"
+            />
         <Button
             android:id="@+id/logButton"
             android:layout_width="wrap_content"
