@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     private void call(){
         String num = "01093866983";                     // 사용자가 등록한 긴급전화번호를 사용해도 좋을듯
         try {
-            Intent callIntent = new Intent(Intent.ACTION_DIAL);     // ACTION CALL 쓰면 곧장 걸린다고 함 _ 나는 통신이 안돼서 확인 불가 ㅜㅜ
+            Intent callIntent = new Intent(Intent.ACTION_CALL);     // ACTION_DIAL 쓰면 바로 안걸리고 다이얼창만 나타남
             callIntent.setData(Uri.parse("tel:" + num));
             startActivity(callIntent);
         }catch(ActivityNotFoundException e){
