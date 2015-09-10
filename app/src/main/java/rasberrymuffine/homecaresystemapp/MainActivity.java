@@ -10,9 +10,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.VideoView;
+
+import static android.widget.Toast.LENGTH_LONG;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         Intent fromLoginIntent = getIntent();
         String serialNum = fromLoginIntent.getStringExtra("serialNum");
 
-        Toast.makeText(this,serialNum+"" , Toast.LENGTH_LONG).show();
+        Toast.makeText(this,serialNum+"" , LENGTH_LONG).show();
 
         videoView = (VideoView)findViewById(R.id.videoView);
         callButton = (Button)findViewById(R.id.callButton);
@@ -48,11 +51,22 @@ public class MainActivity extends AppCompatActivity {
         });
         speakButton = (Button)findViewById(R.id.speakButton);
         logButton = (Button)findViewById(R.id.logButton);
-        // settingButton = (Button)findViewById(R.id.settingButton);
         doorControlSwitch = (Switch)findViewById(R.id.openSwitch);
-
-
+        doorControlSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                checkDoorState(isChecked);
+            }
+        });
     }
+    private void checkDoorState(boolean isChecked)  {
+        if(isChecked){
+            Toast.makeText(this,"checked" , LENGTH_LONG).show();
+        }else {
+            Toast.makeText(this, "unchecked", LENGTH_LONG).show();
+        }
+    }
+
     private void call(){
         String num = "01093866983";                     // 사용자가 등록한 긴급전화번호를 사용해도 좋을듯
         try {
