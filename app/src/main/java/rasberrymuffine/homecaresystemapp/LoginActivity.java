@@ -1,5 +1,6 @@
 package rasberrymuffine.homecaresystemapp;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -50,6 +51,8 @@ public class LoginActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_CODE_JOIN);
             }
         });
+
+
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);

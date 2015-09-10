@@ -1,5 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:weightSum="1">
+
+    <ScrollView
+        android:layout_width="385dp"
+        android:layout_height="510dp"
+        android:id="@+id/scrollView"
+        android:layout_gravity="bottom"
+        android:background="#00887a4d">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="음량 조절"
+                android:id="@+id/textView2"
+                android:textSize="25dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="15dp"
+                android:textColor="#f0000000"
+                android:background="#00ffd2d7" />
+
+            <FrameLayout
+                android:layout_width="382dp"
+                android:layout_height="54dp"
+                android:layout_weight="1.69"
+                android:layout_gravity="center_vertical"
+                android:background="#fffdfe">
+
+                <SeekBar
+                    android:layout_width="338dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/seekBar"
+                    android:layout_column="0"
+                    android:indeterminate="false"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:background="#00e7fff3" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="5.93"
+                android:layout_marginTop="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="알림 방법"
+                    android:id="@+id/textView"
+                    android:layout_gravity="left|top"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginBottom="15dp"
+                    android:textColor="#f0000000"
+                    android:textSize="25dp" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="팝업 알림"
+                        android:id="@+id/radioButton"
+                        android:layout_marginLeft="60dp" />
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="자동 앱 실행"
+                        android:id="@+id/radioButton2"
+                        android:layout_marginLeft="60dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="left|top"
+                android:layout_marginTop="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="로그 기록"
+                    android:id="@+id/textView3"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="15dp"
+                    android:textColor="#f0000000"
+                    android:textSize="25dp" />
+
+                <ToggleButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/toggleButton"
+                    android:textSize="25dp"
+                    android:checked="false"
+                    android:textOn="로그 기록 저장"
+                    android:textOff="로그 기록 중지" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="New Text"
+                    android:id="@+id/textView4"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="15dp" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="개발자 정보"
+                    android:id="@+id/button2"
+                    android:textSize="22dp"
+                    android:layout_marginTop="30dp"
+                    android:gravity="left"
+                    android:paddingLeft="30dp" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
