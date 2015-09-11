@@ -60,9 +60,11 @@ public class MainActivity extends AppCompatActivity {
         speakButton = (Button)findViewById(R.id.speakButton);
         logButton = (Button)findViewById(R.id.logButton);
         doorControlSwitch = (Switch)findViewById(R.id.openSwitch);
+
         doorControlSwitch.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     if (doorControlSwitch.isChecked() == false) {
                         AlertDialog dialog = createDialogBox();

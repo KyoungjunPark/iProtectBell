@@ -16,7 +16,6 @@ public class JoinActivity extends AppCompatActivity {
 
         Intent fromLoginIntent = getIntent();
 
-        Toast.makeText(this, "welcome", Toast.LENGTH_LONG).show();
 
     }
 
