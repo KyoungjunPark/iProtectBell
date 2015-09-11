@@ -4,7 +4,7 @@
     android:weightSum="1">
 
     <ScrollView
-        android:layout_width="385dp"
+        android:layout_width="match_parent"
         android:layout_height="510dp"
         android:id="@+id/scrollView"
         android:layout_gravity="bottom"
