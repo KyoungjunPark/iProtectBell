@@ -5,32 +5,16 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
-public class JoinActivity extends AppCompatActivity {
-
-    private Button Admin_Join_Button;
-    private Button General_Join_Button;
+public class JoinActivity_Administrator extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_join);
+        setContentView(R.layout.activity_join_administrator);
 
-        Intent fromLoginIntent = getIntent();
 
-        Toast.makeText(this, "welcome", Toast.LENGTH_LONG).show();
-
-        Admin_Join_Button = (Button)findViewById(R.id.Admin_Button);
-        Admin_Join_Button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        General_Join_Button = (Button)findViewById(R.id.General_Button);
 
     }
 
