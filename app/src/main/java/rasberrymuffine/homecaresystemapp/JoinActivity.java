@@ -21,7 +21,6 @@ public class JoinActivity extends AppCompatActivity {
 
         Intent fromLoginIntent = getIntent();
 
-        Toast.makeText(this, "welcome", Toast.LENGTH_LONG).show();
 
         Admin_Join_Button = (Button)findViewById(R.id.Admin_Button);
         Admin_Join_Button.setOnClickListener(new View.OnClickListener() {

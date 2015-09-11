@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,28 +12,37 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
 public class LoginActivity extends AppCompatActivity {
 
     public static final int REQUEST_CODE_MAIN = 1001;
     public static final int REQUEST_CODE_JOIN = 1002;
 
     private EditText inputSerialNum;
-    private Button okButton;
+    private Button loginButton;
     private Button joinButton;
     private String serialNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         inputSerialNum = (EditText)findViewById(R.id.idEdit);
-        okButton = (Button)findViewById(R.id.okButton);
-        okButton.setOnClickListener(new View.OnClickListener() {
+        loginButton = (Button)findViewById(R.id.loginButton);
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // user에게 시리얼 넘버 입력받음
                 serialNum = inputSerialNum.getText().toString();
+                String address = new String("165.194.104.19:8080/login");
+
+              //  ConnectThread thread = new ConnectThread(address,serialNum);
+              //  thread.start();
 
                 Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                 intent.putExtra("serialNum", "서버한테 정보 받아오기");
@@ -46,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getApplicationContext(),JoinActivity.class);
+                Intent intent = new Intent(getApplicationContext(), JoinActivity.class);
 
                 startActivityForResult(intent, REQUEST_CODE_JOIN);
             }
@@ -54,12 +64,32 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+    class ConnectThread extends Thread {
+        String address;
+        String serialNum;
 
-    private boolean getPermission(String serialNum){
-        return true;
-    }
-    private void getUserInfo(Intent intent){
-        intent.putExtra("serialNum", "서버한테 정보 받아오기");
+        public ConnectThread(String address, String serialNum) {
+            this.address = address;
+            this.serialNum=serialNum;
+        }
+
+        public void run() {
+
+            try {
+                int port = 8080;
+
+                Socket sock = new Socket(this.address, port);
+                ObjectOutputStream outstream = new ObjectOutputStream(sock.getOutputStream());
+                outstream.writeObject(serialNum+"박경준짱");
+                outstream.flush();
+
+                sock.close();
+
+            } catch(Exception ex) {
+                ex.printStackTrace();
+            }
+
+        }
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {

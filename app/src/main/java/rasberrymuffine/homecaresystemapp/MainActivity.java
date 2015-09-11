@@ -1,6 +1,8 @@
 package rasberrymuffine.homecaresystemapp;
 
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -57,32 +60,55 @@ public class MainActivity extends AppCompatActivity {
         speakButton = (Button)findViewById(R.id.speakButton);
         logButton = (Button)findViewById(R.id.logButton);
         doorControlSwitch = (Switch)findViewById(R.id.openSwitch);
-        doorControlSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                checkDoorState(isChecked);
 
+        doorControlSwitch.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (doorControlSwitch.isChecked() == false) {
+                        AlertDialog dialog = createDialogBox();
+                        dialog.show();
+                    }
+                }
+                return false;
             }
         });
 
-    }
-    private void checkDoorState(boolean isChecked)  {
-        if(isChecked){
-            Toast.makeText(this,"checked" , LENGTH_LONG).show();
-        }else {
-            Toast.makeText(this, "unchecked", LENGTH_LONG).show();
-        }
     }
 
     private void call(){
         String num = "01093866983";                     // 사용자가 등록한 긴급전화번호를 사용해도 좋을듯
         try {
-            Intent callIntent = new Intent(Intent.ACTION_DIAL);     // ACTION CALL 쓰면 곧장 걸린다고 함 _ 나는 통신이 안돼서 확인 불가 ㅜㅜ
+            Intent callIntent = new Intent(Intent.ACTION_CALL);     // ACTION_DIAL 쓰면 바로 안걸리고 다이얼창만 나타남
             callIntent.setData(Uri.parse("tel:" + num));
             startActivity(callIntent);
         }catch(ActivityNotFoundException e){
             Log.e("전화를 겁니다.", "전화를 걸 수 없습니다.", e);
         }
+    }
+
+    private AlertDialog createDialogBox(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Warning");
+        builder.setMessage("도어락을 해제하시겠습니까?");
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int whichButton){
+                //doorControlSwitch.toggle();
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int whichButton){
+                doorControlSwitch.toggle();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        return dialog;
+
     }
 
     @Override
