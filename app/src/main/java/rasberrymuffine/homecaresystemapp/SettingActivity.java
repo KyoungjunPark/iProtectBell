@@ -38,6 +38,12 @@ public class SettingActivity  extends AppCompatActivity {
         });
         saveLogOrNotButton = (Button)findViewById(R.id.saveLogOrNot);
         developerInfoButton = (Button)findViewById(R.id.developerInfo);
+        developerInfoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
 
     }

@@ -39,10 +39,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // user에게 시리얼 넘버 입력받음
                 serialNum = inputSerialNum.getText().toString();
-                String address = new String("165.194.104.19:8080/login");
-
-              //  ConnectThread thread = new ConnectThread(address,serialNum);
-              //  thread.start();
 
                 Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                 intent.putExtra("serialNum", "서버한테 정보 받아오기");
@@ -64,33 +60,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
-    class ConnectThread extends Thread {
-        String address;
-        String serialNum;
-
-        public ConnectThread(String address, String serialNum) {
-            this.address = address;
-            this.serialNum=serialNum;
-        }
-
-        public void run() {
-
-            try {
-                int port = 8080;
-
-                Socket sock = new Socket(this.address, port);
-                ObjectOutputStream outstream = new ObjectOutputStream(sock.getOutputStream());
-                outstream.writeObject(serialNum+"박경준짱");
-                outstream.flush();
-
-                sock.close();
-
-            } catch(Exception ex) {
-                ex.printStackTrace();
-            }
-
-        }
-    }
+  
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
