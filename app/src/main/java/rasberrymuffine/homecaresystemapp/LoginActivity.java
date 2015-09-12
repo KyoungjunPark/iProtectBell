@@ -22,7 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_JOIN = 1002;
 
     private EditText inputSerialNum;
-    private Button okButton;
+    private Button loginButton;
     private Button joinButton;
     private String serialNum;
 
@@ -33,8 +33,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         inputSerialNum = (EditText)findViewById(R.id.idEdit);
-        okButton = (Button)findViewById(R.id.okButton);
-        okButton.setOnClickListener(new View.OnClickListener() {
+        loginButton = (Button)findViewById(R.id.loginButton);
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // user에게 시리얼 넘버 입력받음
@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), JoinActivity.class);
 
-                startActivityForResult(intent, REQUEST_CODE_JOIN);
+                startActivity(intent);
             }
         });
 

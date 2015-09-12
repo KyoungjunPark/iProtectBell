@@ -9,36 +9,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class JoinActivity extends AppCompatActivity {
+public class JoinActivity_Administrator extends AppCompatActivity {
 
-    private Button Admin_Join_Button;
-    private Button General_Join_Button;
-
+    Button join_button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_join);
+        setContentView(R.layout.activity_join_administrator);
 
-        Intent fromLoginIntent = getIntent();
-
-
-        Admin_Join_Button = (Button)findViewById(R.id.Admin_Button);
-        Admin_Join_Button.setOnClickListener(new View.OnClickListener() {
+        join_button = (Button)findViewById(R.id.join_button);
+        join_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent2 = new Intent(getApplicationContext(), JoinActivity_Administrator.class);
-                startActivity(intent2);
-
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(intent);
             }
         });
-        General_Join_Button = (Button)findViewById(R.id.General_Button);
-        General_Join_Button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               Toast.makeText(getApplicationContext(), "관리자 가입을 먼저 해주세요", Toast.LENGTH_LONG).show();
-            }
-        });
+
     }
 
 

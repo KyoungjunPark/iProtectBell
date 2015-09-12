@@ -74,37 +74,8 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-        /*
-        doorControlSwitch.setOnClickListener(new View.OnClickListener() {   //onTouchListener랑 똑같아ㅠㅠㅠ
-            @Override
-            public void onClick(View v) {
-                if(doorControlSwitch.isChecked() == true) {
-                    AlertDialog dialog = createDialogBox();
-                    dialog.show();
-                }
-            }
-        });*/
-        /*doorControlSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {   //doorSwitch 상태변화 체크
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                checkDoorState(isChecked);
-
-            }
-        });*/
 
     }
-
-    /*
-    private void checkDoorState(boolean isChecked) {    //doorSwitch 상태변화 체크 함수
-        if (isChecked) {
-            AlertDialog dialog = createDialogBox();
-            dialog.show();
-            Toast.makeText(this, "checked", LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "unchecked", LENGTH_LONG).show();
-        }
-    }
-    */
 
     private void call(){
         String num = "01093866983";                     // 사용자가 등록한 긴급전화번호를 사용해도 좋을듯
