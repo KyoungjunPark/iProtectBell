@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), JoinActivity.class);
 
-                startActivityForResult(intent, REQUEST_CODE_JOIN);
+                startActivity(intent);
             }
         });
 

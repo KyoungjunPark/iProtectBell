@@ -27,10 +27,18 @@ public class JoinActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Intent intent2 = new Intent(getApplicationContext(), JoinActivity_Administrator.class);
+                startActivity(intent2);
+
             }
         });
         General_Join_Button = (Button)findViewById(R.id.General_Button);
-
+        General_Join_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               Toast.makeText(getApplicationContext(), "관리자 가입을 먼저 해주세요", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 
