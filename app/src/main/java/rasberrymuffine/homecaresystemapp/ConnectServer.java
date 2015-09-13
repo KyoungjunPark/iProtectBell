@@ -44,6 +44,13 @@ public class ConnectServer {
         new CommunicationTask().execute("sendLoginInfo", id, password);
     }
 
+
+    // 함수 자체가 달라질 수 있음
+    public static boolean getPermission(){
+
+        return true;
+    }
+
     public static void Get_Log() {
         new CommunicationTask().execute("log");
     }
@@ -70,7 +77,7 @@ public class ConnectServer {
                     URL obj = new URL("http://165.194.104.19:5000/login");
                     HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-                    //add reuqest header
+                    //add request header
                     con.setRequestMethod("POST");
                     con.setRequestProperty("user_id", params[1]);
                     con.setRequestProperty("user_password", params[2]);

@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
     Button callButton;
     Button speakButton;
     Button logButton;
-    Button settingButton;
     Switch doorControlSwitch;
 
     @Override
@@ -43,9 +42,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Intent fromLoginIntent = getIntent();
-        String serialNum = fromLoginIntent.getStringExtra("serialNum");
-
-        Toast.makeText(this,serialNum+"" , LENGTH_LONG).show();
 
         videoView = (WebView)findViewById(R.id.videoView);
         videoView.getSettings().setJavaScriptEnabled(true);
