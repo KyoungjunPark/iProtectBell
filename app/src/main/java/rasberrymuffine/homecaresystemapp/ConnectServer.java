@@ -2,22 +2,45 @@ package rasberrymuffine.homecaresystemapp;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.EditText;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.protocol.HTTP;
 import org.json.simple.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Created by USER on 2015-09-13.
+ * Created by 경준 on 2015-09-13.
  */
 public class ConnectServer {
+    private static CommunicationTask task;
+    private static String userID;
+    private static String userPW;
+
+    ConnectServer(){
+       task = new CommunicationTask();
+    }
+
+    public static void Send_Login_Info(String id, String password){
+        userID = id;
+        userPW = password;
+        task.execute("sendLoginInfo");
+    }
+
     public static void Get_Log() {
-        CommunicationTask task = new CommunicationTask();
         task.execute("log");
     }
 
@@ -25,6 +48,7 @@ public class ConnectServer {
 
         @Override
         protected Boolean doInBackground(String... params) {
+
 
             if(params[0] == "log") {
                 try {
@@ -38,6 +62,53 @@ public class ConnectServer {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+            if(params[0] == "sendLoginInfo"){
+                try {
+
+                    Log.d("-----1-----","--------------");
+                    URL url = new URL("http://165.194.104.19:5000/login");
+
+                    Log.d("------2-----", "--------------");
+                    HttpClient client = new DefaultHttpClient();
+
+                    Log.d("------3-----", "--------------");
+                    HttpConnectionParams.setConnectionTimeout(client.getParams(), 30000);
+
+                    Log.d("------4-----", "--------------");
+                    HttpPost post = new HttpPost(url.toString());
+
+                    JSONObject userInfo = new JSONObject();
+
+                    userInfo.put("user_id", userID);
+                    userInfo.put("user_password", userPW);
+
+
+
+                    Log.d("------json-----", userInfo.toString());
+
+                    try {
+                        StringEntity entity = new StringEntity(userInfo.toString(), HTTP.UTF_8);
+                        entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+
+                        post.setEntity(entity);
+
+                        try {
+                            HttpResponse httpResponse = client.execute(post);
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+
             }
             return true;
         }
