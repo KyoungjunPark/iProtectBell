@@ -43,7 +43,7 @@ public class ConnectServer {
     public static void Send_Login_Info(String id, String password){
         new CommunicationTask().execute("sendLoginInfo", id, password);
     }
-    
+
     public static void Get_Log() {
         new CommunicationTask().execute("log");
     }

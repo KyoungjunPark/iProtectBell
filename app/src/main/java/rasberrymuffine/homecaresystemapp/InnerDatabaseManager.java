@@ -10,10 +10,7 @@ import java.sql.SQLException;
  * Created by 예림 on 2015-09-13.
  */
 public class InnerDatabaseManager {
-<<<<<<< HEAD
 
-=======
->>>>>>> a2f6aa61bd44493d5c64c9eeb6b8e5dccf26460d
     private static final String DATABASE_NAME = "addressbook.db";
     private static final int DATABASE_VERSION = 1;
     public static SQLiteDatabase mDB;
