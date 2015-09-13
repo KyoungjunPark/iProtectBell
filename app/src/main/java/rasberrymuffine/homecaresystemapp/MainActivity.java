@@ -27,8 +27,9 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Created by 예림 on 2015-09-09.
      */
-    public static final int REQUEST_CODE_SETTING = 1003;
     public static final int REQUEST_CODE_LOG = 1001;
+    public static final int REQUEST_CODE_SPEAK = 1002;
+    public static final int REQUEST_CODE_SETTING = 1003;
 
     WebView videoView;
     Button callButton;
@@ -55,6 +56,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         speakButton = (Button)findViewById(R.id.speakButton);
+        speakButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speak();
+            }
+        });
         logButton = (Button)findViewById(R.id.logButton);
         logButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         doorControlSwitch = (Switch)findViewById(R.id.openSwitch);
-
         doorControlSwitch.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -118,6 +124,11 @@ public class MainActivity extends AppCompatActivity {
     private void showLogView() {
         Intent intent = new Intent(getApplicationContext(), LogActivity.class);
         startActivityForResult(intent, REQUEST_CODE_LOG);
+    }
+
+    private void speak() {
+        Intent intent = new Intent(getApplicationContext(), SpeakActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_SPEAK);
     }
 
     @Override
