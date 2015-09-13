@@ -21,10 +21,13 @@ public class LoginActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_MAIN = 1001;
     public static final int REQUEST_CODE_JOIN = 1002;
 
-    private EditText inputSerialNum;
+    private EditText idEdit;
+    private EditText pwEdit;
+    private String userInputID;
+    private String userInputPW;
+
     private Button loginButton;
     private Button joinButton;
-    private String serialNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +35,28 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        inputSerialNum = (EditText)findViewById(R.id.idEdit);
+        idEdit = (EditText)findViewById(R.id.idEdit);
+        pwEdit = (EditText)findViewById(R.id.pwEdit);
+
         loginButton = (Button)findViewById(R.id.loginButton);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // user에게 시리얼 넘버 입력받음
-                serialNum = inputSerialNum.getText().toString();
 
+                userInputID = idEdit.getText().toString();
+                userInputPW = pwEdit.getText().toString();
+
+                Log.d("result", userInputID + " / " + userInputPW);
+
+
+                ConnectServer.Send_Login_Info(idEdit.getText().toString(), pwEdit.getText().toString());
+
+
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                 intent.putExtra("serialNum", "서버한테 정보 받아오기");
                     startActivityForResult(intent, REQUEST_CODE_MAIN);
@@ -57,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        ConnectServer.Get_Log();
+   //     ConnectServer.Get_Log();
 
     }
   

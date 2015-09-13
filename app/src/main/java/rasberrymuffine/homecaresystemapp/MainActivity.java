@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
      * Created by 예림 on 2015-09-09.
      */
     public static final int REQUEST_CODE_SETTING = 1003;
+    public static final int REQUEST_CODE_LOG = 1001;
 
     WebView videoView;
     Button callButton;
@@ -59,6 +60,12 @@ public class MainActivity extends AppCompatActivity {
         });
         speakButton = (Button)findViewById(R.id.speakButton);
         logButton = (Button)findViewById(R.id.logButton);
+        logButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLogView();
+            }
+        });
         doorControlSwitch = (Switch)findViewById(R.id.openSwitch);
 
         doorControlSwitch.setOnTouchListener(new View.OnTouchListener() {
@@ -109,6 +116,12 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         return dialog;
 
+    }
+
+    //log를 listview로 정의하여 새로 창을 띄워야 할듯
+    private void showLogView() {
+        Intent intent = new Intent(getApplicationContext(), LogActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_LOG);
     }
 
     @Override

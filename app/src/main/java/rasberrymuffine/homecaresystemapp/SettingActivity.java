@@ -10,15 +10,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 public class SettingActivity  extends AppCompatActivity {
 
     EditText inputPhoneNumber;
     Button phoneNumSaveButton;
-    Button saveLogOrNotButton;
     Button developerInfoButton;
     String phoneNumber;
+    RadioButton popup_button;
+    RadioButton execution_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,24 @@ public class SettingActivity  extends AppCompatActivity {
                 dialog.show();
             }
         });
-        saveLogOrNotButton = (Button)findViewById(R.id.saveLogOrNot);
+        popup_button = (RadioButton)findViewById(R.id.radioButton);
+        popup_button.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        execution_button = (RadioButton)findViewById(R.id.radioButton2);
+        execution_button.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         developerInfoButton = (Button)findViewById(R.id.developerInfo);
         developerInfoButton.setOnClickListener(new View.OnClickListener() {
             @Override
