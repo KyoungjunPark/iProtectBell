@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        ConnectServer.Get_Log();
 
     }
   
