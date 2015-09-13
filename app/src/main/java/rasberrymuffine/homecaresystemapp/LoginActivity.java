@@ -1,6 +1,8 @@
 package rasberrymuffine.homecaresystemapp;
 
+import android.app.AlertDialog;
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -46,23 +48,19 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                userInputID = idEdit.getText().toString();
-                userInputPW = pwEdit.getText().toString();
+                ConnectServer.Send_Login_Info(idEdit.getText().toString(),pwEdit.getText().toString());
 
-                Log.d("result", userInputID + " / " + userInputPW);
-
-                ConnectServer a = new ConnectServer();
-                a.Send_Login_Info(idEdit.getText().toString(), pwEdit.getText().toString());
-
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                intent.putExtra("serialNum", "서버한테 정보 받아오기");
+                if (ConnectServer.getPermission()) {
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivityForResult(intent, REQUEST_CODE_MAIN);
                     finish();
+                }
+                else{
+                    AlertDialog dialog = createDialogBox();
+                    dialog.show();
+                    idEdit.setText("");
+                    pwEdit.setText("");
+                }
             }
         });
         joinButton = (Button)findViewById(R.id.joinButton);
@@ -75,7 +73,6 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-   //     ConnectServer.Get_Log();
 
     }
   
@@ -105,5 +102,19 @@ public class LoginActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private AlertDialog createDialogBox() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("로그인 실패");
+        builder.setMessage("아이디와 비밀번호를 확인해주세요. \n\n");
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        return dialog;
+
+    }
 
 }
