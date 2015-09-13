@@ -16,12 +16,16 @@ import org.apache.http.protocol.HTTP;
 import org.json.simple.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
+
 
 /**
  * Created by 경준 on 2015-09-13.
@@ -37,22 +41,17 @@ public class ConnectServer {
     }
 
     public static void Send_Login_Info(String id, String password){
-        userID = id;
-        userPW = password;
-        task.execute("sendLoginInfo");
+        new CommunicationTask().execute("sendLoginInfo", id, password);
     }
-
-
+    
     public static void Get_Log() {
-        task.execute("log");
+        new CommunicationTask().execute("log");
     }
 
     private static class CommunicationTask extends AsyncTask<String, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(String... params) {
-
-
             if(params[0] == "log") {
                 try {
                     URL url = new URL("http://165.194.104.19:5000/log");
@@ -65,43 +64,31 @@ public class ConnectServer {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
-            if(params[0] == "sendLoginInfo"){
+            } else if(params[0] == "sendLoginInfo"){
                 try {
-                    URL url = new URL("http://165.194.104.19:5000/login");
-                    HttpClient client = new DefaultHttpClient();
-                    HttpConnectionParams.setConnectionTimeout(client.getParams(), 30000);
-                    HttpPost post = new HttpPost(url.toString());
-                    JSONObject userInfo = new JSONObject();
 
-                    userInfo.put("user_id", userID);
-                    userInfo.put("user_password", userPW);
+                    URL obj = new URL("http://165.194.104.19:5000/login");
+                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-                    try {
-                        StringEntity entity = new StringEntity(userInfo.toString(), HTTP.UTF_8);
-                        entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                    //add reuqest header
+                    con.setRequestMethod("POST");
+                    con.setRequestProperty("user_id", params[1]);
+                    con.setRequestProperty("user_password", params[2]);
+                    con.setDoOutput(true);
+                    DataOutputStream wr = new DataOutputStream(con.getOutputStream());
 
-                        post.setEntity(entity);
-                        try {
-                            HttpResponse httpResponse = client.execute(post);
+                    BufferedReader in = new BufferedReader(
+                            new InputStreamReader(con.getInputStream()));
+                    String inputLine;
+                    StringBuffer response = new StringBuffer();
 
-                            try {
-                                Thread.sleep(3000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            resultCode = httpResponse.getEntity().toString();
-
-                            Log.d("----result---", resultCode);
-
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
                     }
-                } catch (MalformedURLException e) {
+                    in.close();
+                    Log.d("server",response.toString());
+
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
