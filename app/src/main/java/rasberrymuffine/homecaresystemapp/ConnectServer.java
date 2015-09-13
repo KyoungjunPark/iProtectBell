@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.EditText;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -29,6 +30,7 @@ public class ConnectServer {
     private static CommunicationTask task;
     private static String userID;
     private static String userPW;
+    private static String resultCode;
 
     ConnectServer(){
        task = new CommunicationTask();
@@ -39,6 +41,7 @@ public class ConnectServer {
         userPW = password;
         task.execute("sendLoginInfo");
     }
+
 
     public static void Get_Log() {
         task.execute("log");
@@ -65,50 +68,42 @@ public class ConnectServer {
             }
             if(params[0] == "sendLoginInfo"){
                 try {
-
-                    Log.d("-----1-----","--------------");
                     URL url = new URL("http://165.194.104.19:5000/login");
-
-                    Log.d("------2-----", "--------------");
                     HttpClient client = new DefaultHttpClient();
-
-                    Log.d("------3-----", "--------------");
                     HttpConnectionParams.setConnectionTimeout(client.getParams(), 30000);
-
-                    Log.d("------4-----", "--------------");
                     HttpPost post = new HttpPost(url.toString());
-
                     JSONObject userInfo = new JSONObject();
 
                     userInfo.put("user_id", userID);
                     userInfo.put("user_password", userPW);
-
-
-
-                    Log.d("------json-----", userInfo.toString());
 
                     try {
                         StringEntity entity = new StringEntity(userInfo.toString(), HTTP.UTF_8);
                         entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 
                         post.setEntity(entity);
-
                         try {
                             HttpResponse httpResponse = client.execute(post);
+
+                            try {
+                                Thread.sleep(3000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            resultCode = httpResponse.getEntity().toString();
+
+                            Log.d("----result---", resultCode);
+
 
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
-
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
-
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
-
             }
             return true;
         }

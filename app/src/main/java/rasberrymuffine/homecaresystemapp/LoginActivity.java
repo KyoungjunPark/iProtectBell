@@ -21,6 +21,9 @@ public class LoginActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_MAIN = 1001;
     public static final int REQUEST_CODE_JOIN = 1002;
 
+    public static final int LOGIN_PERMITTED = 200;
+    public static final int LOGIN_DENIED = 201;
+
     private EditText idEdit;
     private EditText pwEdit;
     private String userInputID;
@@ -48,9 +51,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 Log.d("result", userInputID + " / " + userInputPW);
 
-
-                ConnectServer.Send_Login_Info(idEdit.getText().toString(), pwEdit.getText().toString());
-
+                ConnectServer a = new ConnectServer();
+                a.Send_Login_Info(idEdit.getText().toString(), pwEdit.getText().toString());
 
                 try {
                     Thread.sleep(5000);
@@ -61,7 +63,6 @@ public class LoginActivity extends AppCompatActivity {
                 intent.putExtra("serialNum", "서버한테 정보 받아오기");
                     startActivityForResult(intent, REQUEST_CODE_MAIN);
                     finish();
-
             }
         });
         joinButton = (Button)findViewById(R.id.joinButton);
@@ -103,4 +104,6 @@ public class LoginActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
