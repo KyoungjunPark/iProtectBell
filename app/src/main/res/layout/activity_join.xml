@@ -37,7 +37,7 @@
             android:drawableTop="@drawable/administrator"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:text="관리인 가입"
+            android:text="관리자 가입"
             android:textSize="22dp"
             android:paddingTop="60dp"
             android:textStyle="bold|italic" />

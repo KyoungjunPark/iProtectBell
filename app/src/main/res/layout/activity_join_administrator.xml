@@ -55,7 +55,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="53dp"
                 android:layout_marginRight="20dp"
-                android:ems="10"
+                android:maxLength="10"
                 android:hint="사용할 ID를 입력해주세요" />
         </LinearLayout>
 
@@ -84,8 +84,9 @@
                 android:layout_weight="1"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="45dp"
-                android:ems="10"
+                android:maxLength="10"
                 android:hint="사용할 비밀번호를 입력해주세요"
+                android:inputType="textPassword"
                 android:layout_gravity="center" />
 
         </LinearLayout>
