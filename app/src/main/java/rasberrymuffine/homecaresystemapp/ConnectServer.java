@@ -57,12 +57,14 @@ public class ConnectServer {
             e.printStackTrace();
         }
 
-       // return "200";
+      //  return "200";
        return resultCode;
     }
 
     public static void Send_Join_Info(String id, String password, String serialNum){
+
         new CommunicationTask().execute("join", id, password, serialNum);
+
     }
 
     public static ArrayList<ArrayList<String>> Get_Log() {

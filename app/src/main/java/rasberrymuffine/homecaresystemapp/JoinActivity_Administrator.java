@@ -9,11 +9,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class JoinActivity_Administrator extends AppCompatActivity {
 
     Button join_button;
+    EditText userID;
+    EditText userPW;
+    EditText userSerialNum;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,10 +29,23 @@ public class JoinActivity_Administrator extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                userID = (EditText)findViewById(R.id.editID);
+                userPW = (EditText)findViewById(R.id.editPW);
+                userSerialNum = (EditText)findViewById(R.id.editSerialNumber);
 
-                // 다이얼로그 테스트
-                AlertDialog dialog = createDialogBox("실패");
-                dialog.show();
+                ConnectServer.Send_Join_Info(userID.getText().toString(), userPW.getText().toString(), userSerialNum.getText().toString());
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                String resultCode = ConnectServer.getPermission();
+
+                   AlertDialog dialog = createDialogBox(resultCode);
+                   dialog.show();
+
             }
         });
 
@@ -59,7 +77,7 @@ public class JoinActivity_Administrator extends AppCompatActivity {
     private AlertDialog createDialogBox(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        if(msg=="성공") {
+        if(msg=="200") {
             builder.setTitle("회원가입 성공");
 
             builder.setMessage("환영합니다! \n서비스를 이용하려면 로그인해주세요. \n\n");
