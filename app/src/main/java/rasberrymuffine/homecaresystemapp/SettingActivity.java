@@ -38,7 +38,7 @@ public class SettingActivity  extends AppCompatActivity {
                 dialog.show();
             }
         });
-        popup_button = (RadioButton)findViewById(R.id.radioButton);
+        popup_button = (RadioButton)findViewById(R.id.popupRadioButton);
         popup_button.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -47,7 +47,7 @@ public class SettingActivity  extends AppCompatActivity {
             }
         });
 
-        execution_button = (RadioButton)findViewById(R.id.radioButton2);
+        execution_button = (RadioButton)findViewById(R.id.executionRadioButton);
         execution_button.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -60,7 +60,7 @@ public class SettingActivity  extends AppCompatActivity {
         developerInfoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent infoIntent = new Intent(getApplicationContext(), JoinActivity_Administrator.class);
+                Intent infoIntent = new Intent(getApplicationContext(), developInfo.class);
                 startActivity(infoIntent);
             }
         });
