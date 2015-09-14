@@ -82,7 +82,7 @@
                         android:text="팝업 알림"
                         android:id="@+id/radioButton"
                         android:layout_marginLeft="60dp"
-                        android:checked="true" />
+                        android:checked="false" />
 
                     <RadioButton
                         android:layout_width="wrap_content"
