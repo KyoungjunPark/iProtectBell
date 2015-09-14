@@ -70,7 +70,7 @@ public class ConnectServer {
 
         @Override
         protected Boolean doInBackground(String... params) {
-            if(params[0] == "log") {
+            if(params[0].equals("log")) {
                 try {
 
 
@@ -96,37 +96,39 @@ public class ConnectServer {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            } else if(params[0] == "sendLoginInfo"){
+            } else {
+                if (params[0] == "sendLoginInfo") {
 
-                URL obj = null;
-                try {
-                    obj = new URL("http://165.194.104.19:5000/login");
-                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                    URL obj = null;
+                    try {
+                        obj = new URL("http://165.194.104.19:5000/login");
+                        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-                    con.setRequestProperty("Accept-Language",  "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
-                    con.setDoOutput(true);
-                    String parameter = URLEncoder.encode("user_id", "UTF-8") + "="+ URLEncoder.encode(params[1], "UTF-8");
+                        con.setRequestProperty("Accept-Language", "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
+                        con.setDoOutput(true);
+                        String parameter = URLEncoder.encode("user_id", "UTF-8") + "=" + URLEncoder.encode(params[1], "UTF-8");
 
-                    parameter += "&" + URLEncoder.encode("user_password", "UTF-8") + "="+ URLEncoder.encode(params[2], "UTF-8");
+                        parameter += "&" + URLEncoder.encode("user_password", "UTF-8") + "=" + URLEncoder.encode(params[2], "UTF-8");
 
-                    OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-                    wr.write(parameter);
-                    wr.flush();
-                    BufferedReader rd = null;
+                        OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+                        wr.write(parameter);
+                        wr.flush();
+                        BufferedReader rd = null;
+                        if (con.getResponseCode() == 200) {
+                            //로그인 성공
+                        } else {
+                            //로그인 실패
+                            //rd.readLine() means fail reason
+                            //so you must toast this message to user
+                            rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
+                            Log.d("server", String.valueOf(rd.readLine()));
+                        }
 
-                    rd = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
-
-                    if(rd.readLine().equals("fail")){
-                        //로그인에 실패함
-                    }else if(rd.readLine().equals("success")){
-                        //로그인에 성공함
-                    }else{ //not happen
-
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
+                }
             }
             return true;
         }
