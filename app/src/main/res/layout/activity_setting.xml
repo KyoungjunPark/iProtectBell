@@ -20,7 +20,6 @@
                 android:layout_height="wrap_content"
                 android:text="음량 조절"
                 android:id="@+id/textVolumeControl"
-                android:textSize="25dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="15dp"
@@ -63,7 +62,7 @@
                     android:layout_marginLeft="30dp"
                     android:layout_marginBottom="15dp"
                     android:textColor="#f0000000"
-                    android:textSize="25dp" />
+                    />
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -76,20 +75,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/radioGroup">
-                    <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="팝업 알림"
-                        android:id="@+id/popupRadioButton"
-                        android:layout_marginLeft="60dp"
-                        android:checked="true" />
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="팝업 알림"
+                            android:id="@+id/popupRadioButton"
+                            android:layout_marginLeft="60dp"
+                            android:checked="true" />
 
-                    <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="자동 앱 실행"
-                        android:id="@+id/executionRadioButton"
-                        android:layout_marginLeft="60dp" />
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="자동 앱 실행"
+                            android:id="@+id/executionRadioButton"
+                            android:layout_marginLeft="60dp" />
                     </RadioGroup>
                 </LinearLayout>
 
@@ -98,6 +97,8 @@
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:layout_marginTop="30dp">
 
                 <TextView
@@ -107,7 +108,6 @@
                     android:id="@+id/textReportNumber"
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="15dp"
-                    android:textSize="25dp"
                     android:textColor="#f0000000"
                     android:layout_row="0"
                     android:layout_column="0" />
@@ -131,7 +131,7 @@
                     android:layout_gravity="right"
                     android:layout_row="1"
                     android:layout_column="1"
-                    android:textSize="19dp" />
+                    />
 
             </GridLayout>
 
@@ -144,7 +144,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="개발자 정보"
-                    android:textSize="22dp"
                     android:layout_marginTop="30dp"
                     android:gravity="left"
                     android:paddingLeft="30dp" />

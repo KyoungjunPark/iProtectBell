@@ -52,12 +52,9 @@ public class LoginActivity extends AppCompatActivity {
                 ConnectServer c = new ConnectServer();
                 c.Send_Login_Info(idEdit.getText().toString(), pwEdit.getText().toString());
 
-<<<<<<< HEAD
-                if (c.getPermission()) {
-=======
                 String msg=ConnectServer.getPermission();
                 if (msg=="200") {
->>>>>>> d4af09f192ca60e1acbecafcfdd177c96f6f2611
+
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivityForResult(intent, REQUEST_CODE_MAIN);
                     finish();
