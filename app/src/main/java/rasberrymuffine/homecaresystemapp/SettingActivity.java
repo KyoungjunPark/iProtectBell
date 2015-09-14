@@ -60,7 +60,8 @@ public class SettingActivity  extends AppCompatActivity {
         developerInfoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent infoIntent = new Intent(getApplicationContext(), JoinActivity_Administrator.class);
+                startActivity(infoIntent);
             }
         });
 
