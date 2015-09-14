@@ -40,6 +40,7 @@ public class ConnectServer {
     private static String userID;
     private static String userPW;
     private static String resultCode;
+    private static String resultMsg;
     private static ArrayList<ArrayList<String>> logList;
 
     ConnectServer(){
@@ -51,9 +52,13 @@ public class ConnectServer {
     }
 
     // 함수 자체가 달라질 수 있음
-    public static boolean getPermission(){
-
-        return true;
+    public static String getPermission(){
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return resultCode;
     }
 
     public static ArrayList<ArrayList<String>> Get_Log() {
@@ -83,15 +88,22 @@ public class ConnectServer {
                         log+=line;
                     }
 
-                    //위의변수 log가 서버에서 받아온 json변수입니
+                    // 위의변수 log가 서버에서 받아온 json변수 입니
                     // logExam 대신 서버에서 받아온 정보 써야함.....
                     /*
                     String logExam = "[{\"date\":\"2015-09-17 18:26\",\"information\":\"신고\",\"importance\":\"MAJOR\"}," +
+                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"음성\",\"importance\":\"MINOR\"}," +
+                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"닫힘\",\"importance\":\"MINOR\"}," +
+                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"열림\",\"importance\":\"MINOR\"}," +
+                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"로그인\",\"importance\":\"MINOR\"}," +
+                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"로그오프\",\"importance\":\"MINOR\"}," +
+                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"로그\",\"importance\":\"MINOR\"}," +
                             "{\"date\":\"2015-09-17 18:26\",\"information\":\"신고\",\"importance\":\"MAJOR\"}," +
                             "{\"date\":\"2015-09-17 18:26\",\"information\":\"종료\",\"importance\":\"MAJOR\"}," +
                             "{\"date\":\"2015-09-17sadsad 18:26\",\"information\":\"종료\",\"importance\":\"MINOR\"}," +
                             "{\"date\":\"2015-09-17 18:26\",\"information\":\"신고\",\"importance\":\"MINOR\"}]";
                             */
+
                     logList =jsonParse(log);
 
                 } catch (IOException e) {
@@ -116,12 +128,15 @@ public class ConnectServer {
                         wr.flush();
                         BufferedReader rd = null;
                         if (con.getResponseCode() == 200) {
-                            //로그인 성공
+                            // 로그인 성공
+                            resultCode = 200+"";
                         } else {
-                            //로그인 실패
-                            //rd.readLine() means fail reason
-                            //so you must toast this message to user
+                            // 로그인 실패
+                            // rd.readLine() means fail reason
+                            // so you must toast this message to user
+
                             rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
+                            resultCode=rd.readLine().toString();
                             Log.d("server", String.valueOf(rd.readLine()));
                         }
 
@@ -156,20 +171,11 @@ public class ConnectServer {
                 if(json!=null){
                     oneLog = new ArrayList<String>();
                     for(int j=0; j<jsonKey.size();j++){
-
-                        Log.d("key",jsonKey.get(j));
-                        Log.d("result",json.getString(jsonKey.get(j)));
                         oneLog.add(json.getString(jsonKey.get(j)));
                     }
                     logList.add(oneLog);
                 }
             }
-
-            for(int i=0; i<logList.size(); i++){
-                for(int j=0; j<logList.get(0).size(); j++)
-                    Log.d("result /// ", jsonKey.get(j) + " - " + logList.get(i).get(j));
-            }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }

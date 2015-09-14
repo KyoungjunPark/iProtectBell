@@ -44,6 +44,26 @@ public class LogActivity extends Activity {
                 case "종료":
                     adapter.addItem(new LogItem(res.getDrawable(R.drawable.logoff), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
                     break;
+                case "음성":
+                    adapter.addItem(new LogItem(res.getDrawable(R.drawable.white_speaker), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
+                    break;
+                case "열림":
+                    adapter.addItem(new LogItem(res.getDrawable(R.drawable.opened), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
+                    break;
+                case "닫힘":
+                    adapter.addItem(new LogItem(res.getDrawable(R.drawable.closed), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
+                    break;
+                case "로그인":
+                    adapter.addItem(new LogItem(res.getDrawable(R.drawable.login), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
+                    break;
+                case "로그오프":
+                    adapter.addItem(new LogItem(res.getDrawable(R.drawable.logoff), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
+                    break;
+                case "로그":
+                    adapter.addItem(new LogItem(res.getDrawable(R.drawable.white_log), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
+                    break;
+                default:
+                    break;
             }
 
             listView.setAdapter(adapter);
