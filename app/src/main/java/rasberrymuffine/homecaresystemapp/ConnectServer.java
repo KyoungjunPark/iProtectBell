@@ -85,9 +85,12 @@ public class ConnectServer {
 
                     // logExam 대신 서버에서 받아온 정보 써야함.....
                     String logExam = "[{\"date\":\"2015-09-17 18:26\",\"information\":\"신고\",\"importance\":\"MAJOR\"}," +
-                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"신고\",\"importance\":\"MAJOR\"}," +
-                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"종료\",\"importance\":\"MAJOR\"}," +
-                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"종료\",\"importance\":\"MINOR\"}," +
+                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"음성\",\"importance\":\"MINOR\"}," +
+                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"닫힘\",\"importance\":\"MINOR\"}," +
+                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"열림\",\"importance\":\"MINOR\"}," +
+                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"로그인\",\"importance\":\"MINOR\"}," +
+                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"로그오프\",\"importance\":\"MINOR\"}," +
+                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"로그\",\"importance\":\"MINOR\"}," +
                             "{\"date\":\"2015-09-17 18:26\",\"information\":\"신고\",\"importance\":\"MINOR\"}]";
                     logList =jsonParse(logExam);
 
@@ -147,20 +150,11 @@ public class ConnectServer {
                 if(json!=null){
                     oneLog = new ArrayList<String>();
                     for(int j=0; j<jsonKey.size();j++){
-
-                        Log.d("key",jsonKey.get(j));
-                        Log.d("result",json.getString(jsonKey.get(j)));
                         oneLog.add(json.getString(jsonKey.get(j)));
                     }
                     logList.add(oneLog);
                 }
             }
-
-            for(int i=0; i<logList.size(); i++){
-                for(int j=0; j<logList.get(0).size(); j++)
-                    Log.d("result /// ", jsonKey.get(j) + " - " + logList.get(i).get(j));
-            }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
