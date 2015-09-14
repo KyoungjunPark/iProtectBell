@@ -21,10 +21,12 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -38,6 +40,7 @@ public class ConnectServer {
     private static String userID;
     private static String userPW;
     private static String resultCode;
+    private static String resultMsg;
     private static ArrayList<ArrayList<String>> logList;
 
     ConnectServer(){
@@ -49,9 +52,13 @@ public class ConnectServer {
     }
 
     // 함수 자체가 달라질 수 있음
-    public static boolean getPermission(){
-
-        return true;
+    public static String getPermission(){
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return resultCode;
     }
 
     public static ArrayList<ArrayList<String>> Get_Log() {
@@ -68,58 +75,75 @@ public class ConnectServer {
 
         @Override
         protected Boolean doInBackground(String... params) {
-            if(params[0] == "log") {
+            if(params[0].equals("log")) {
                 try {
 
 
                     URL url = new URL("http://165.194.104.19:5000/log");
-                    /* BufferedReader rd = new BufferedReader(new InputStreamReader(url.openStream()));
+                    BufferedReader rd = new BufferedReader(new InputStreamReader(url.openStream()));
 
                     String line;
-                    String log = null;
+                    String log = "";
                     while ((line = rd.readLine()) != null) {
                         log+=line;
-                        Log.d("hello", line);
                     }
-                    */
 
+                    // 위의변수 log가 서버에서 받아온 json변수 입니
                     // logExam 대신 서버에서 받아온 정보 써야함.....
+                    /*
                     String logExam = "[{\"date\":\"2015-09-17 18:26\",\"information\":\"신고\",\"importance\":\"MAJOR\"}," +
+                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"음성\",\"importance\":\"MINOR\"}," +
+                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"닫힘\",\"importance\":\"MINOR\"}," +
+                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"열림\",\"importance\":\"MINOR\"}," +
+                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"로그인\",\"importance\":\"MINOR\"}," +
+                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"로그오프\",\"importance\":\"MINOR\"}," +
+                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"로그\",\"importance\":\"MINOR\"}," +
                             "{\"date\":\"2015-09-17 18:26\",\"information\":\"신고\",\"importance\":\"MAJOR\"}," +
                             "{\"date\":\"2015-09-17 18:26\",\"information\":\"종료\",\"importance\":\"MAJOR\"}," +
-                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"종료\",\"importance\":\"MINOR\"}," +
+                            "{\"date\":\"2015-09-17sadsad 18:26\",\"information\":\"종료\",\"importance\":\"MINOR\"}," +
                             "{\"date\":\"2015-09-17 18:26\",\"information\":\"신고\",\"importance\":\"MINOR\"}]";
-                    logList =jsonParse(logExam);
+                            */
+
+                    logList =jsonParse(log);
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            } else if(params[0] == "sendLoginInfo"){
-                try {
+            } else {
+                if (params[0] == "sendLoginInfo") {
 
-                    URL obj = new URL("http://165.194.104.19:5000/login");
-                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                    URL obj = null;
+                    try {
+                        obj = new URL("http://165.194.104.19:5000/login");
+                        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-                    //add request header
-                    con.setRequestMethod("POST");
-                    con.setRequestProperty("user_id", params[1]);
-                    con.setRequestProperty("user_password", params[2]);
-                    con.setDoOutput(true);
-                    DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                        con.setRequestProperty("Accept-Language", "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
+                        con.setDoOutput(true);
+                        String parameter = URLEncoder.encode("user_id", "UTF-8") + "=" + URLEncoder.encode(params[1], "UTF-8");
 
-                    BufferedReader in = new BufferedReader(
-                            new InputStreamReader(con.getInputStream()));
-                    String inputLine;
-                    StringBuffer response = new StringBuffer();
+                        parameter += "&" + URLEncoder.encode("user_password", "UTF-8") + "=" + URLEncoder.encode(params[2], "UTF-8");
 
-                    while ((inputLine = in.readLine()) != null) {
-                        response.append(inputLine);
+                        OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+                        wr.write(parameter);
+                        wr.flush();
+                        BufferedReader rd = null;
+                        if (con.getResponseCode() == 200) {
+                            // 로그인 성공
+                            resultCode = 200+"";
+                        } else {
+                            // 로그인 실패
+                            // rd.readLine() means fail reason
+                            // so you must toast this message to user
+
+                            rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
+                            resultCode=rd.readLine().toString();
+                            Log.d("server", String.valueOf(rd.readLine()));
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                    in.close();
-                    Log.d("server",response.toString());
 
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
             return true;
@@ -147,20 +171,11 @@ public class ConnectServer {
                 if(json!=null){
                     oneLog = new ArrayList<String>();
                     for(int j=0; j<jsonKey.size();j++){
-
-                        Log.d("key",jsonKey.get(j));
-                        Log.d("result",json.getString(jsonKey.get(j)));
                         oneLog.add(json.getString(jsonKey.get(j)));
                     }
                     logList.add(oneLog);
                 }
             }
-
-            for(int i=0; i<logList.size(); i++){
-                for(int j=0; j<logList.get(0).size(); j++)
-                    Log.d("result /// ", jsonKey.get(j) + " - " + logList.get(i).get(j));
-            }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }

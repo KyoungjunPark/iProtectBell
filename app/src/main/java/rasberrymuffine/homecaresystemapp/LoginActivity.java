@@ -50,13 +50,14 @@ public class LoginActivity extends AppCompatActivity {
 
                 ConnectServer.Send_Login_Info(idEdit.getText().toString(),pwEdit.getText().toString());
 
-                if (ConnectServer.getPermission()) {
+                String msg=ConnectServer.getPermission();
+                if (msg=="200") {
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivityForResult(intent, REQUEST_CODE_MAIN);
                     finish();
                 }
                 else{
-                    AlertDialog dialog = createDialogBox();
+                    AlertDialog dialog = createDialogBox(msg);
                     dialog.show();
                     idEdit.setText("");
                     pwEdit.setText("");
@@ -102,11 +103,12 @@ public class LoginActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private AlertDialog createDialogBox() {
+    private AlertDialog createDialogBox(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle("로그인 실패");
-        builder.setMessage("아이디와 비밀번호를 확인해주세요. \n\n");
+
+        builder.setMessage("아이디와 비밀번호를 확인해주세요. \n" +msg+ "\n");
         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
             }
