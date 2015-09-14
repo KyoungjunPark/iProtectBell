@@ -30,11 +30,23 @@ public class LogActivity extends Activity {
          * 불러올 예정이다!
          *
          */
-
-        // 임시로 등록해둔 정보 불러옴
         ConnectServer c = new ConnectServer();
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         ArrayList<ArrayList<String>> logList = c.Get_Log();
 
+        for(int i=0; i<logList.size(); i++){
+            for(int j=0; j<3; j++){
+
+                Log.d("check", logList.get(i).get(j).toString());
+            }
+
+        }
         for (int i = 0; i < logList.size(); i++) {
             // index 1번이 infomation
             switch (logList.get(i).get(1)) {

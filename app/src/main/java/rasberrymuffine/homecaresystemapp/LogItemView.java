@@ -1,6 +1,8 @@
 package rasberrymuffine.homecaresystemapp;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -32,6 +34,21 @@ public class LogItemView extends RelativeLayout {
         contentItem.setText(aItem.getData(1));
         importanceItem = (TextView) findViewById(R.id.importanceItem);
         importanceItem.setText(aItem.getData(2));
+
+        switch (aItem.getData(2)){
+            case "MAJOR":
+                importanceItem.setTextColor(Color.RED);
+                break;
+            case "MINOR":
+                importanceItem.setTextColor(Color.GREEN);
+                break;
+            case "NORMAL":
+                importanceItem.setTextColor(Color.BLUE);
+                break;
+
+        }
+
+
     }
 
     public void setText(int index, String data) {
