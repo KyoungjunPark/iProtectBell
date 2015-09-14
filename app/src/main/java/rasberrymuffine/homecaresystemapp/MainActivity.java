@@ -1,6 +1,7 @@
 package rasberrymuffine.homecaresystemapp;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.MediaController;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_SETTING = 1003;
 
     WebView videoView;
+    Button fullScreenButton;
     Button callButton;
     Button speakButton;
     Button logButton;
@@ -46,6 +49,15 @@ public class MainActivity extends AppCompatActivity {
 
         videoView = (WebView)findViewById(R.id.videoView);
         videoView.getSettings().setJavaScriptEnabled(true);
+
+        fullScreenButton = (Button)findViewById(R.id.fullScreenButton);
+        fullScreenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFullScreen();
+            }
+        });
+     // 얘 잠시만 주석처리할게여...ㅎㅎ
 
         videoView.loadUrl("http://165.194.104.19:8080/stream");
 
@@ -85,6 +97,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void showFullScreen() {
+        WebView webView = new WebView(this);
+        //webView.loadUrl("http://www.google.com/");
+        webView.loadUrl("http://165.194.104.19:8080/stream");
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+
+                return true;
+            }
+        });
+        Dialog dialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        dialog.setContentView(webView);
+        dialog.show();
     }
 
     private void call(){
