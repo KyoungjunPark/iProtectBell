@@ -75,23 +75,24 @@ public class ConnectServer {
 
 
                     URL url = new URL("http://165.194.104.19:5000/log");
-                    /* BufferedReader rd = new BufferedReader(new InputStreamReader(url.openStream()));
+                    BufferedReader rd = new BufferedReader(new InputStreamReader(url.openStream()));
 
                     String line;
-                    String log = null;
+                    String log = "";
                     while ((line = rd.readLine()) != null) {
                         log+=line;
-                        Log.d("hello", line);
                     }
-                    */
 
+                    //위의변수 log가 서버에서 받아온 json변수입니
                     // logExam 대신 서버에서 받아온 정보 써야함.....
+                    /*
                     String logExam = "[{\"date\":\"2015-09-17 18:26\",\"information\":\"신고\",\"importance\":\"MAJOR\"}," +
                             "{\"date\":\"2015-09-17 18:26\",\"information\":\"신고\",\"importance\":\"MAJOR\"}," +
                             "{\"date\":\"2015-09-17 18:26\",\"information\":\"종료\",\"importance\":\"MAJOR\"}," +
-                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"종료\",\"importance\":\"MINOR\"}," +
+                            "{\"date\":\"2015-09-17sadsad 18:26\",\"information\":\"종료\",\"importance\":\"MINOR\"}," +
                             "{\"date\":\"2015-09-17 18:26\",\"information\":\"신고\",\"importance\":\"MINOR\"}]";
-                    logList =jsonParse(logExam);
+                            */
+                    logList =jsonParse(log);
 
                 } catch (IOException e) {
                     e.printStackTrace();
