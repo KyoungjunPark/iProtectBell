@@ -21,10 +21,12 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -95,32 +97,36 @@ public class ConnectServer {
                     e.printStackTrace();
                 }
             } else if(params[0] == "sendLoginInfo"){
-                try {
 
-                    URL obj = new URL("http://165.194.104.19:5000/login");
+                URL obj = null;
+                try {
+                    obj = new URL("http://165.194.104.19:5000/login");
                     HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-                    //add request header
-                    con.setRequestMethod("POST");
-                    con.setRequestProperty("user_id", params[1]);
-                    con.setRequestProperty("user_password", params[2]);
+                    con.setRequestProperty("Accept-Language",  "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
                     con.setDoOutput(true);
-                    DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                    String parameter = URLEncoder.encode("user_id", "UTF-8") + "="+ URLEncoder.encode(params[1], "UTF-8");
 
-                    BufferedReader in = new BufferedReader(
-                            new InputStreamReader(con.getInputStream()));
-                    String inputLine;
-                    StringBuffer response = new StringBuffer();
+                    parameter += "&" + URLEncoder.encode("user_password", "UTF-8") + "="+ URLEncoder.encode(params[2], "UTF-8");
 
-                    while ((inputLine = in.readLine()) != null) {
-                        response.append(inputLine);
+                    OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+                    wr.write(parameter);
+                    wr.flush();
+                    BufferedReader rd = null;
+
+                    rd = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+
+                    if(rd.readLine().equals("fail")){
+                        //로그인에 실패함
+                    }else if(rd.readLine().equals("success")){
+                        //로그인에 성공함
+                    }else{ //not happen
+
                     }
-                    in.close();
-                    Log.d("server",response.toString());
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
             }
             return true;
         }
