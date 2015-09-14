@@ -19,7 +19,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="음량 조절"
-                android:id="@+id/textView2"
+                android:id="@+id/textVolumeControl"
                 android:textSize="25dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="30dp"
@@ -37,7 +37,7 @@
                 <SeekBar
                     android:layout_width="338dp"
                     android:layout_height="wrap_content"
-                    android:id="@+id/seekBar"
+                    android:id="@+id/VolumeControlBar"
                     android:layout_column="0"
                     android:indeterminate="false"
                     android:layout_gravity="center_vertical"
@@ -57,7 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="알림 방법"
-                    android:id="@+id/textView"
+                    android:id="@+id/textNoticeMethod"
                     android:layout_gravity="left|top"
                     android:layout_marginTop="15dp"
                     android:layout_marginLeft="30dp"
@@ -80,7 +80,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="팝업 알림"
-                        android:id="@+id/radioButton"
+                        android:id="@+id/popupRadioButton"
                         android:layout_marginLeft="60dp"
                         android:checked="true" />
 
@@ -88,7 +88,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="자동 앱 실행"
-                        android:id="@+id/radioButton2"
+                        android:id="@+id/executionRadioButton"
                         android:layout_marginLeft="60dp" />
                     </RadioGroup>
                 </LinearLayout>
@@ -104,7 +104,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="신고 전화 번호"
-                    android:id="@+id/textView4"
+                    android:id="@+id/textReportNumber"
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="15dp"
                     android:textSize="25dp"
