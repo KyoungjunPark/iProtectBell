@@ -34,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private Button joinButton;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -94,7 +95,6 @@ public class LoginActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
@@ -108,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
 
         builder.setTitle("로그인 실패");
 
-        builder.setMessage("아이디와 비밀번호를 확인해주세요. \n" +msg+ "\n");
+        builder.setMessage("아이디와 비밀번호를 확인해주세요. \n" + msg + "\n");
         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
             }
