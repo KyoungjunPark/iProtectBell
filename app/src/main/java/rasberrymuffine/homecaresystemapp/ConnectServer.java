@@ -40,7 +40,6 @@ public class ConnectServer {
     private static String userID;
     private static String userPW;
     private static String resultCode;
-    private static String resultMsg;
     private static ArrayList<ArrayList<String>> logList;
 
     ConnectServer(){
@@ -51,20 +50,25 @@ public class ConnectServer {
         new CommunicationTask().execute("sendLoginInfo", id, password);
     }
 
-    // 함수 자체가 달라질 수 있음
     public static String getPermission(){
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return resultCode;
+
+       // return "200";
+       return resultCode;
+    }
+
+    public static void Send_Join_Info(String id, String password, String serialNum){
+        new CommunicationTask().execute("join", id, password, serialNum);
     }
 
     public static ArrayList<ArrayList<String>> Get_Log() {
         new CommunicationTask().execute("log");
         try {
-            Thread.sleep(3000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -75,11 +79,44 @@ public class ConnectServer {
 
         @Override
         protected Boolean doInBackground(String... params) {
-            if(params[0].equals("log")) {
+
+
+            if(params[0].equals("join")){
+                URL obj = null;
+                try {
+                    obj = new URL("http://165.194.104.19:5000/join");
+
+                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                    con.setRequestProperty("Accept-Language", "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
+                    con.setDoOutput(true);
+                    String parameter = URLEncoder.encode("user_id", "UTF-8") + "=" + URLEncoder.encode(params[1], "UTF-8");
+                    parameter += "&" + URLEncoder.encode("user_password", "UTF-8") + "=" + URLEncoder.encode(params[2], "UTF-8");
+                    parameter += "&" + URLEncoder.encode("serial_number", "UTF-8") + "=" + URLEncoder.encode(params[3], "UTF-8");
+
+                    OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+                    wr.write(parameter);
+                    wr.flush();
+                    BufferedReader rd = null;
+                    if (con.getResponseCode() == 200) {
+                        // 회원가입 성공
+                        resultCode = 200+"";
+                    } else {
+                        // 회원가입 실패
+                        rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
+                        resultCode=rd.readLine().toString();
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }else if(params[0].equals("log")) {
                 try {
 
 
                     URL url = new URL("http://165.194.104.19:5000/log");
+
                     BufferedReader rd = new BufferedReader(new InputStreamReader(url.openStream()));
 
                     String line;
@@ -88,9 +125,10 @@ public class ConnectServer {
                         log+=line;
                     }
 
+
                     // 위의변수 log가 서버에서 받아온 json변수 입니
                     // logExam 대신 서버에서 받아온 정보 써야함.....
-                    /*
+/*
                     String logExam = "[{\"date\":\"2015-09-17 18:26\",\"information\":\"신고\",\"importance\":\"MAJOR\"}," +
                             "{\"date\":\"2015-09-17 18:26\",\"information\":\"음성\",\"importance\":\"MINOR\"}," +
                             "{\"date\":\"2015-09-17 18:26\",\"information\":\"닫힘\",\"importance\":\"MINOR\"}," +
@@ -102,15 +140,13 @@ public class ConnectServer {
                             "{\"date\":\"2015-09-17 18:26\",\"information\":\"종료\",\"importance\":\"MAJOR\"}," +
                             "{\"date\":\"2015-09-17sadsad 18:26\",\"information\":\"종료\",\"importance\":\"MINOR\"}," +
                             "{\"date\":\"2015-09-17 18:26\",\"information\":\"신고\",\"importance\":\"MINOR\"}]";
-                            */
-
+*/
                     logList =jsonParse(log);
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            } else {
-                if (params[0] == "sendLoginInfo") {
+            } else if (params[0] == "sendLoginInfo") {
 
                     URL obj = null;
                     try {
@@ -143,9 +179,7 @@ public class ConnectServer {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
                 }
-            }
             return true;
         }
     }
@@ -172,6 +206,7 @@ public class ConnectServer {
                     oneLog = new ArrayList<String>();
                     for(int j=0; j<jsonKey.size();j++){
                         oneLog.add(json.getString(jsonKey.get(j)));
+                        Log.d("result",json.getString(jsonKey.get(j)));
                     }
                     logList.add(oneLog);
                 }

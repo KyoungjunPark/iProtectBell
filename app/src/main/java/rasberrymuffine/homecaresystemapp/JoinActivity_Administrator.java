@@ -1,5 +1,7 @@
 package rasberrymuffine.homecaresystemapp;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,9 +23,11 @@ public class JoinActivity_Administrator extends AppCompatActivity {
         join_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                startActivity(intent);
+
+
+                // 다이얼로그 테스트
+                AlertDialog dialog = createDialogBox("실패");
+                dialog.show();
             }
         });
 
@@ -50,6 +54,37 @@ public class JoinActivity_Administrator extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private AlertDialog createDialogBox(String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        if(msg=="성공") {
+            builder.setTitle("회원가입 성공");
+
+            builder.setMessage("환영합니다! \n서비스를 이용하려면 로그인해주세요. \n\n");
+            builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+
+                    // 플래그 변경했음.
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+                    startActivity(intent);
+                }
+            });
+        }else{  builder.setTitle("회원가입 실패");
+
+            // 에러 메시지 전송
+            builder.setMessage("비밀번호는 알파벳, 숫자, 특수문자를 모두 포함한 20자리 이상이어야 합니다. \n\n");
+            builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                }
+            });}
+
+        AlertDialog dialog = builder.create();
+        return dialog;
+
     }
 }
 

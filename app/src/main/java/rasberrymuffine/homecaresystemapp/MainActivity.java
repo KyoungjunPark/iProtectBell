@@ -47,8 +47,7 @@ public class MainActivity extends AppCompatActivity {
         videoView = (WebView)findViewById(R.id.videoView);
         videoView.getSettings().setJavaScriptEnabled(true);
 
-     // 얘 잠시만 주석처리할게여...ㅎㅎ
-     //   videoView.loadUrl("http://165.194.104.19:8080/stream");
+        videoView.loadUrl("http://165.194.104.19:8080/stream");
 
         callButton = (Button)findViewById(R.id.callButton);
         callButton.setOnClickListener(new View.OnClickListener() {
