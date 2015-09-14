@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -51,7 +54,7 @@ public class LogActivity extends Activity {
                     while ((line = rd.readLine()) != null) {
                         log+=line;
                     }
-                    logList = ConnectServer.jsonParse(log);
+                    logList = jsonParse(log);
                     Log.d("server", String.valueOf(logList.size()));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -78,7 +81,7 @@ public class LogActivity extends Activity {
                         case "닫힘":
                             adapter.addItem(new LogItem(res.getDrawable(R.drawable.closed), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
                             break;
-                        case "로그인":
+                        case "login":
                             adapter.addItem(new LogItem(res.getDrawable(R.drawable.login), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
                             break;
                         case "로그오프":
@@ -95,5 +98,37 @@ public class LogActivity extends Activity {
             }
         });
         c.Get_Log();
+    }
+    public static ArrayList<ArrayList<String>> jsonParse(String log){
+        ArrayList<ArrayList<String>> logList = new ArrayList<ArrayList<String>>();
+
+        ArrayList<String> jsonKey = new ArrayList<String>();
+        jsonKey.add("date");
+        jsonKey.add("type");
+        jsonKey.add("information");
+        jsonKey.add("importance");
+
+
+        ArrayList<String> oneLog;
+
+        try {
+            JSONArray jsonArray = new JSONArray(log);
+            org.json.JSONObject json = null;
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                json = jsonArray.getJSONObject(i);
+                Log.d("-------", json.toString());
+                oneLog = new ArrayList<String>();
+                for (int j = 0; j < jsonKey.size(); j++) {
+                    oneLog.add(json.getString(jsonKey.get(j)));
+                    Log.d("result", json.getString(jsonKey.get(j)));
+                }
+                logList.add(oneLog);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return logList;
     }
 }

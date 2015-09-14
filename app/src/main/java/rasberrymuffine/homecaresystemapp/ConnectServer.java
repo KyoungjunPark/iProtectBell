@@ -86,9 +86,7 @@ public class ConnectServer {
 
             if(params[0].equals("log")) {
 
-            } else if(params[0] == "sendLoginInfo") {
-
-            } else if(params[0].equals("join")){
+            }else if(params[0].equals("join")){
                 URL obj = null;
                 try {
                     obj = new URL("http://165.194.104.19:5000/join");
@@ -143,7 +141,7 @@ public class ConnectServer {
                             // so you must toast this message to user
 
                             rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
-                            resultCode=rd.readLine().toString();
+                            resultCode= rd.readLine();
                             Log.d("server", String.valueOf(rd.readLine()));
                         }
 
@@ -155,35 +153,5 @@ public class ConnectServer {
         }
     }
 
-    // 마음의 여유가 생기면 Tuple로 만들게여.........
-    public static ArrayList<ArrayList<String>> jsonParse(String log){
-                ArrayList<ArrayList<String>> logList = new ArrayList<ArrayList<String>>();
 
-                ArrayList<String> jsonKey = new ArrayList<String>();
-                jsonKey.add("date");
-                jsonKey.add("information");
-                jsonKey.add("importance");
-
-                ArrayList<String> oneLog;
-
-                try {
-                    JSONArray jsonArray = new JSONArray(log);
-                    org.json.JSONObject json = null;
-
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        json = jsonArray.getJSONObject(i);
-                        Log.d("-------", json.toString());
-                        oneLog = new ArrayList<String>();
-                        for (int j = 0; j < jsonKey.size(); j++) {
-                            oneLog.add(json.getString(jsonKey.get(j)));
-                            Log.d("result", json.getString(jsonKey.get(j)));
-                        }
-                        logList.add(oneLog);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-        return logList;
-    }
 }
