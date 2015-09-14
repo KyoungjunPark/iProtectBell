@@ -15,6 +15,9 @@ import android.widget.Toast;
 
 public class SettingActivity  extends AppCompatActivity {
 
+    public static final int RESULT_CODE1 = 1;
+    public static final int RESULT_CODE2 = 2;
+
     EditText inputPhoneNumber;
     Button phoneNumSaveButton;
     Button developerInfoButton;
@@ -28,6 +31,7 @@ public class SettingActivity  extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
         Intent fromMainIntent = getIntent();
 
+
         inputPhoneNumber = (EditText)findViewById(R.id.inputPhoneNumber);
         phoneNumSaveButton = (Button)findViewById(R.id.numberSaveButton);
         phoneNumSaveButton.setOnClickListener(new View.OnClickListener() {
@@ -38,20 +42,25 @@ public class SettingActivity  extends AppCompatActivity {
                 dialog.show();
             }
         });
+
         popup_button = (RadioButton)findViewById(R.id.popupRadioButton);
         popup_button.setOnClickListener(new View.OnClickListener(){
-
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("notice", "popup");
+                setResult(RESULT_CODE1,intent);
 
             }
         });
 
         execution_button = (RadioButton)findViewById(R.id.executionRadioButton);
         execution_button.setOnClickListener(new View.OnClickListener(){
-
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("notice","execution");
+                setResult(RESULT_CODE2, intent);
 
             }
         });
@@ -62,6 +71,7 @@ public class SettingActivity  extends AppCompatActivity {
             public void onClick(View v) {
                 Intent infoIntent = new Intent(getApplicationContext(), developInfo.class);
                 startActivity(infoIntent);
+
             }
         });
 

@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_LOG = 1001;
     public static final int REQUEST_CODE_SPEAK = 1002;
     public static final int REQUEST_CODE_SETTING = 1003;
+    public static final int RESULT_CODE1 = 1;
+    public static final int RESULT_CODE2 = 2;
 
     WebView videoView;
     Button fullScreenButton;
@@ -178,13 +180,32 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent = new Intent(getApplicationContext(),SettingActivity.class);
+            //intent.putExtra("noticeMethod",0);
             startActivityForResult(intent, REQUEST_CODE_SETTING);
 
             return true;
         }
 
-
         return super.onOptionsItemSelected(item);
     }
-}
 
+    protected void onActivityResult(int requestcode, int resultcode, Intent data) {
+        super.onActivityResult(requestcode, resultcode , data);
+
+        if(requestcode==REQUEST_CODE_SETTING){
+            if(resultcode==RESULT_CODE1){
+
+                Toast.makeText(getApplicationContext(),"popup이 선택됨",Toast.LENGTH_LONG).show();
+            }
+            else if(resultcode==RESULT_CODE2){
+                Toast.makeText(getApplicationContext(),"execution이 선택됨",Toast.LENGTH_LONG).show();
+
+            }
+
+            else{
+
+            }
+        }
+    }
+
+}
