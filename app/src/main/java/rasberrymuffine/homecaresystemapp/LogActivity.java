@@ -60,7 +60,7 @@ public class LogActivity extends Activity {
                     adapter.addItem(new LogItem(res.getDrawable(R.drawable.logoff), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
                     break;
                 case "로그":
-                    adapter.addItem(new LogItem(res.getDrawable(R.drawable.log), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
+                    adapter.addItem(new LogItem(res.getDrawable(R.drawable.white_log), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
                     break;
                 default:
                     break;
