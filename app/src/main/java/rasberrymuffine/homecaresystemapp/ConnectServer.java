@@ -36,18 +36,22 @@ import javax.net.ssl.HttpsURLConnection;
  * Created by 경준 on 2015-09-13.
  */
 public class ConnectServer {
-    private static CommunicationTask task;
+    private AsyncTask<String, Void, Boolean> task;
     private static String userID;
     private static String userPW;
     private static String resultCode;
     private static ArrayList<ArrayList<String>> logList;
 
-    ConnectServer(){
+    //not use!
+    public ConnectServer(){
        task = new CommunicationTask();
     }
+    public ConnectServer(AsyncTask<String, Void, Boolean> task){
+        this.task = task;
+    }
 
-    public static void Send_Login_Info(String id, String password){
-        new CommunicationTask().execute("sendLoginInfo", id, password);
+    public void Send_Login_Info(String id, String password){
+        this.task.execute("sendLoginInfo", id, password);
     }
 
     // 함수 자체가 달라질 수 있음
@@ -55,15 +59,13 @@ public class ConnectServer {
 
         return true;
     }
+    public boolean isFinished(){
+        if(task.getStatus() == AsyncTask.Status.FINISHED) return false;
+        else return true;
+    }
 
-    public static ArrayList<ArrayList<String>> Get_Log() {
-        new CommunicationTask().execute("log");
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return logList;
+    public void Get_Log() {
+        this.task.execute("log");
     }
 
     private static class CommunicationTask extends AsyncTask<String, Void, Boolean> {
@@ -71,32 +73,7 @@ public class ConnectServer {
         @Override
         protected Boolean doInBackground(String... params) {
             if(params[0].equals("log")) {
-                try {
 
-
-                    URL url = new URL("http://165.194.104.19:5000/log");
-                    BufferedReader rd = new BufferedReader(new InputStreamReader(url.openStream()));
-
-                    String line;
-                    String log = "";
-                    while ((line = rd.readLine()) != null) {
-                        log+=line;
-                    }
-
-                    //위의변수 log가 서버에서 받아온 json변수입니
-                    // logExam 대신 서버에서 받아온 정보 써야함.....
-                    /*
-                    String logExam = "[{\"date\":\"2015-09-17 18:26\",\"information\":\"신고\",\"importance\":\"MAJOR\"}," +
-                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"신고\",\"importance\":\"MAJOR\"}," +
-                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"종료\",\"importance\":\"MAJOR\"}," +
-                            "{\"date\":\"2015-09-17sadsad 18:26\",\"information\":\"종료\",\"importance\":\"MINOR\"}," +
-                            "{\"date\":\"2015-09-17 18:26\",\"information\":\"신고\",\"importance\":\"MINOR\"}]";
-                            */
-                    logList =jsonParse(log);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             } else {
                 if (params[0] == "sendLoginInfo") {
 
@@ -136,7 +113,7 @@ public class ConnectServer {
     }
 
     // 마음의 여유가 생기면 Tuple로 만들게여.........
-    private static ArrayList<ArrayList<String>> jsonParse(String log){
+    public static ArrayList<ArrayList<String>> jsonParse(String log){
         ArrayList<ArrayList<String>> logList = new ArrayList<ArrayList<String>>();
 
         ArrayList<String> jsonKey = new ArrayList<String>();

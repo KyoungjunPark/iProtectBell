@@ -48,9 +48,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                ConnectServer.Send_Login_Info(idEdit.getText().toString(),pwEdit.getText().toString());
+                ConnectServer c = new ConnectServer();
+                c.Send_Login_Info(idEdit.getText().toString(), pwEdit.getText().toString());
 
-                if (ConnectServer.getPermission()) {
+                if (c.getPermission()) {
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivityForResult(intent, REQUEST_CODE_MAIN);
                     finish();
