@@ -36,12 +36,10 @@ public class LogActivity extends Activity {
          * 불러올 예정이다!
          *
          */
-
         // 임시로 등록해둔 정보 불러옴
         ConnectServer c = new ConnectServer(new AsyncTask<String, Void, Boolean>() {
 
             private ArrayList<ArrayList<String>> logList;
-
             @Override
             protected Boolean doInBackground(String... params) {
                 try {
@@ -62,7 +60,6 @@ public class LogActivity extends Activity {
             }
             @Override
             protected void onPostExecute(Boolean aBoolean) {
-                Log.d("server",String.valueOf(logList.size()));
                 for (int i = 0; i < logList.size(); i++) {
                     // index 1번이 infomation
                     switch (logList.get(i).get(1)) {
@@ -72,12 +69,31 @@ public class LogActivity extends Activity {
                         case "종료":
                             adapter.addItem(new LogItem(res.getDrawable(R.drawable.logoff), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
                             break;
+                        case "음성":
+                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.white_speaker), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
+                            break;
+                        case "열림":
+                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.opened), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
+                            break;
+                        case "닫힘":
+                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.closed), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
+                            break;
+                        case "로그인":
+                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.login), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
+                            break;
+                        case "로그오프":
+                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.logoff), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
+                            break;
+                        case "로그":
+                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.white_log), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
+                            break;
+                        default:
+                            break;
                     }
                 }
                 listView.setAdapter(adapter);
             }
         });
-
         c.Get_Log();
     }
 }

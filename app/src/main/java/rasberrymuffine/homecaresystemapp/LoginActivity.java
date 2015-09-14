@@ -34,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private Button joinButton;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -51,13 +52,18 @@ public class LoginActivity extends AppCompatActivity {
                 ConnectServer c = new ConnectServer();
                 c.Send_Login_Info(idEdit.getText().toString(), pwEdit.getText().toString());
 
+<<<<<<< HEAD
                 if (c.getPermission()) {
+=======
+                String msg=ConnectServer.getPermission();
+                if (msg=="200") {
+>>>>>>> d4af09f192ca60e1acbecafcfdd177c96f6f2611
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivityForResult(intent, REQUEST_CODE_MAIN);
                     finish();
                 }
                 else{
-                    AlertDialog dialog = createDialogBox();
+                    AlertDialog dialog = createDialogBox(msg);
                     dialog.show();
                     idEdit.setText("");
                     pwEdit.setText("");
@@ -94,7 +100,6 @@ public class LoginActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
@@ -103,11 +108,12 @@ public class LoginActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private AlertDialog createDialogBox() {
+    private AlertDialog createDialogBox(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle("로그인 실패");
-        builder.setMessage("아이디와 비밀번호를 확인해주세요. \n\n");
+
+        builder.setMessage("아이디와 비밀번호를 확인해주세요. \n" + msg + "\n");
         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
             }
