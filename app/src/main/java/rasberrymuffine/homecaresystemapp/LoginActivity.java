@@ -96,8 +96,6 @@ public class LoginActivity extends AppCompatActivity {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
-
                         return null;
                     }
 
@@ -118,7 +116,6 @@ public class LoginActivity extends AppCompatActivity {
 
                     }
                 });
-            //    c.Send_Login_Info();
             }
         });
         joinButton = (Button)findViewById(R.id.joinButton);

@@ -48,7 +48,7 @@ public class LogActivity extends Activity {
                         log+=line;
                     }
                     logList = jsonParse(log);
-                    Log.d("server", String.valueOf(logList.size()));
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
