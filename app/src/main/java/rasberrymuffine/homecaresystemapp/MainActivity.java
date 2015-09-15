@@ -5,7 +5,9 @@ import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -22,6 +24,14 @@ import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+
 import static android.widget.Toast.LENGTH_LONG;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_LOG = 1001;
     public static final int REQUEST_CODE_SPEAK = 1002;
     public static final int REQUEST_CODE_SETTING = 1003;
+    public static final int REQUEST_CODE_FULLSCREEN = 1004;
     public static final int RESULT_CODE1 = 1;
     public static final int RESULT_CODE2 = 2;
 
@@ -51,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         videoView = (WebView)findViewById(R.id.videoView);
         videoView.getSettings().setJavaScriptEnabled(true);
-
+        videoView.loadUrl("http://165.194.104.19:8080/stream");
         fullScreenButton = (Button)findViewById(R.id.fullScreenButton);
         fullScreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,9 +70,6 @@ public class MainActivity extends AppCompatActivity {
                 showFullScreen();
             }
         });
-
-        videoView.loadUrl("http://165.194.104.19:8080/stream");
-
         callButton = (Button)findViewById(R.id.callButton);
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,20 +109,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showFullScreen() {
-        WebView webView = new WebView(this);
-        //webView.loadUrl("http://www.google.com/");
-        webView.loadUrl("http://165.194.104.19:8080/stream");
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-
-                return true;
-            }
-        });
-        Dialog dialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-        dialog.setContentView(webView);
-        dialog.show();
+        Intent intent = new Intent(getApplicationContext(), FullscreenActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_FULLSCREEN);
     }
 
     private void call(){
@@ -151,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //log를 listview로 정의하여 새로 창을 띄워야 할듯
     private void showLogView() {
         Intent intent = new Intent(getApplicationContext(), LogActivity.class);
         startActivityForResult(intent, REQUEST_CODE_LOG);
@@ -160,6 +155,40 @@ public class MainActivity extends AppCompatActivity {
     private void speak() {
         Intent intent = new Intent(getApplicationContext(), SpeakActivity.class);
         startActivityForResult(intent, REQUEST_CODE_SPEAK);
+    }
+
+    private void sentToServer(final String type) {
+        ConnectServer c = new ConnectServer(new AsyncTask<String, Void, Boolean>() {
+
+            @Override
+            protected Boolean doInBackground(String... params) {
+
+                URL obj = null;
+                try {
+                    obj = new URL("http://165.194.104.19:5000/login");  //추후 변경
+                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                    con.setRequestProperty("Accept-Language", "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
+                    con.setDoOutput(true);
+                    String parameter = URLEncoder.encode("user_id", "UTF-8") + "=" + URLEncoder.encode(type, "UTF-8");
+
+                    OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+                    wr.write(parameter);
+                    wr.flush();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean aBoolean) {
+
+
+            }
+        });
     }
 
     @Override
