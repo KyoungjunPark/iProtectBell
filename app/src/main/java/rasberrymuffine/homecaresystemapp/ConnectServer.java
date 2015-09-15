@@ -19,11 +19,9 @@ public class ConnectServer {
     }
     public void setAsncTask(AsyncTask<String, Void, Boolean> task) {
         this.task = task;
-        this.task.execute();
     }
     public void setToken(String token){this.token = token;}
-    public boolean isFinished() {
-        if (task.getStatus() == AsyncTask.Status.FINISHED) return false;
-        else return true;
+    public void execute(){
+        this.task.execute();
     }
 }

@@ -115,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     }
                 });
-            //    c.Send_Login_Info();
+                ConnectServer.getInstance().execute();
             }
         });
         joinButton = (Button)findViewById(R.id.joinButton);
