@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void call(){
 
-        sendLogToServer("call", "call call call call");
+        sendLogToServer("call", "call call call call","MAJOR");
 
         String num = "01093866983";                     // 사용자가 등록한 긴급전화번호를 사용해도 좋을듯
         try {
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
             public void onClick(DialogInterface dialog, int whichButton){
-                //doorControlSwitch.toggle();
+                sendLogToServer("open", "do you want to build a snowman?","MAJOR");
             }
         });
 
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showLogView() {
 
-        sendLogToServer("log", "read log");
+        sendLogToServer("log", "read log", "MINOR");
 
         Intent intent = new Intent(getApplicationContext(), LogActivity.class);
         startActivityForResult(intent, REQUEST_CODE_LOG);
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void speak() {
 
-        sendLogToServer("speak", "speak");
+        sendLogToServer("speak", "speak", "MINOR");
 
         Intent intent = new Intent(getApplicationContext(), SpeakActivity.class);
         startActivityForResult(intent, REQUEST_CODE_SPEAK);
@@ -176,14 +176,14 @@ public class MainActivity extends AppCompatActivity {
         return date;
     }
 
-    private void sendLogToServer(final String type, final String information) {
+    private void sendLogToServer(final String type, final String information, final String importance) {
         ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(String... params) {
 
                 URL obj = null;
                 try {
-                    obj = new URL("http://165.194.104.19:5000/login");  //추후 변경
+                    obj = new URL("http://165.194.104.19:5000/send_log");
                     HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
                     con.setRequestProperty("Accept-Language", "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
@@ -192,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
                     String parameter = URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode(type, "UTF-8");
                     parameter += "&" + URLEncoder.encode("information", "UTF-8") + "=" + URLEncoder.encode(information, "UTF-8");
                     parameter += "&" + URLEncoder.encode("date", "UTF-8") + "=" + URLEncoder.encode(getDate(), "UTF-8");
+                    parameter += "&" + URLEncoder.encode("date", "UTF-8") + "=" + URLEncoder.encode(importance, "UTF-8");
 
                     OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
                     wr.write(parameter);
