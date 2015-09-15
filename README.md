@@ -21,5 +21,5 @@ return: 200 or 404
 
 #send log
 url: ip:5000/send_log
-parameter: date, information, importance
+parameter: date, type, information, importance
 return: 200 or 404(not critical)
