@@ -33,14 +33,7 @@ public class LogActivity extends Activity {
 
         res = getResources();
 
-        /*
-         * server에서 log를 불러와야해
-         *
-         * 불러올 예정이다!
-         *
-         */
-        // 임시로 등록해둔 정보 불러옴
-        ConnectServer c = new ConnectServer(new AsyncTask<String, Void, Boolean>() {
+        ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
 
             private ArrayList<ArrayList<String>> logList;
             @Override
@@ -97,7 +90,7 @@ public class LogActivity extends Activity {
                 listView.setAdapter(adapter);
             }
         });
-        c.Get_Log();
+    //    c.Get_Log();
     }
     public static ArrayList<ArrayList<String>> jsonParse(String log){
         ArrayList<ArrayList<String>> logList = new ArrayList<ArrayList<String>>();

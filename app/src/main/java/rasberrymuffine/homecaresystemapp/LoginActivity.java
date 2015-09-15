@@ -1,9 +1,9 @@
 package rasberrymuffine.homecaresystemapp;
 
 import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,11 +12,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -24,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_JOIN = 1002;
 
     public static final int LOGIN_PERMITTED = 200;
-    public static final int LOGIN_DENIED = 201;
+    public static final int LOGIN_DENIED = 404;
 
     private EditText idEdit;
     private EditText pwEdit;
@@ -34,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private Button joinButton;
 
+    private String isLoginPermitted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,22 +53,69 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                ConnectServer c = new ConnectServer();
-                c.Send_Login_Info(idEdit.getText().toString(), pwEdit.getText().toString());
+                userInputID = idEdit.getText().toString();
+                userInputPW = pwEdit.getText().toString();
+
+                ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
+
+                    @Override
+                    protected Boolean doInBackground(String... params) {
+
+                        URL obj = null;
+                        try {
+                            obj = new URL("http://165.194.104.19:5000/login");
+                            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                            con.setRequestProperty("Accept-Language", "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
+                            con.setDoOutput(true);
+                            String parameter = URLEncoder.encode("user_id", "UTF-8") + "=" + URLEncoder.encode(userInputID, "UTF-8");
+
+                            parameter += "&" + URLEncoder.encode("user_password", "UTF-8") + "=" + URLEncoder.encode(userInputPW, "UTF-8");
+
+                            OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+                            wr.write(parameter);
+                            wr.flush();
+                            BufferedReader rd = null;
+
+                            if (con.getResponseCode() == LOGIN_PERMITTED) {
+                                // 로그인 성공
+                                rd = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+                                String token = rd.readLine();
+                                ConnectServer.getInstance().setToken(token);
+
+                                isLoginPermitted = LOGIN_PERMITTED+"";
+                            } else {
+                                // 로그인 실패
+                                rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
+                                isLoginPermitted= rd.readLine();
+                                Log.d("server", String.valueOf(rd.readLine()));
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
 
-                String msg=ConnectServer.getPermission();
-                if (msg=="200") {
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivityForResult(intent, REQUEST_CODE_MAIN);
-                    finish();
-                }
-                else{
-                    AlertDialog dialog = createDialogBox(msg);
-                    dialog.show();
-                    idEdit.setText("");
-                    pwEdit.setText("");
-                }
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Boolean aBoolean) {
+                        if (isLoginPermitted==LOGIN_PERMITTED+"") {
+
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivityForResult(intent, REQUEST_CODE_MAIN);
+                            finish();
+                        }
+                        else{
+                            AlertDialog dialog = createDialogBox(isLoginPermitted);
+                            dialog.show();
+                            idEdit.setText("");
+                            pwEdit.setText("");
+                        }
+
+                    }
+                });
+            //    c.Send_Login_Info();
             }
         });
         joinButton = (Button)findViewById(R.id.joinButton);
