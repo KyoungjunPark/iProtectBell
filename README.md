@@ -21,5 +21,11 @@ return: 200 or 404
 
 #send log
 url: ip:5000/send_log
+methods: POST
 parameter: date, type, information, importance
 return: 200 or 404(not critical)
+
+#send video setting
+url: ip:5000/setting_video
+methods: POST
+parameter: width, height
