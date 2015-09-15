@@ -84,7 +84,7 @@ public class JoinActivity_Administrator extends AppCompatActivity {
                                 rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
                                 //isJoinPermitted= "200";
                                 isJoinPermitted= rd.readLine();
-                                Log.d("server", String.valueOf(rd.readLine()));
+                                Log.d("----- server -----", String.valueOf(rd.readLine()));
                             }
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -150,7 +150,7 @@ public class JoinActivity_Administrator extends AppCompatActivity {
             builder.setTitle("회원가입 실패");
 
             // 에러 메시지 전송
-            builder.setMessage("비밀번호는 알파벳, 숫자, 특수문자를 모두 포함한 20자리 이상이어야 합니다. \n\n");
+            builder.setMessage(msg+"\n");
             builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                 }
