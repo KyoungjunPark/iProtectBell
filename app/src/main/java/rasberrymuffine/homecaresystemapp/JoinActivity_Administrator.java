@@ -24,6 +24,8 @@ import java.net.URLEncoder;
 
 public class JoinActivity_Administrator extends AppCompatActivity {
 
+    public static final int JOIN_PERMITTED = 200;
+
     Button join_button;
 
     EditText userID;
@@ -32,7 +34,7 @@ public class JoinActivity_Administrator extends AppCompatActivity {
 
     String userInputID;
     String userInputPW;
-    String userInputSerialNum;
+    String serialNum;
 
     String isJoinPermitted;
 
@@ -51,7 +53,7 @@ public class JoinActivity_Administrator extends AppCompatActivity {
 
                 userInputID = userID.getText().toString();
                 userInputPW = userPW.getText().toString();
-                userInputSerialNum = userSerialNum.getText().toString();
+                serialNum = userSerialNum.getText().toString();
 
                 ConnectServer c = new ConnectServer(new AsyncTask<String, Void, Boolean>() {
                     @Override
@@ -59,7 +61,7 @@ public class JoinActivity_Administrator extends AppCompatActivity {
 
                         URL obj = null;
                         try {
-                            obj = new URL("http://165.194.104.19:5000/login");
+                            obj = new URL("http://165.194.104.19:5000/join");
 
                             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                             con.setRequestProperty("Accept-Language", "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
@@ -67,19 +69,20 @@ public class JoinActivity_Administrator extends AppCompatActivity {
 
                             String parameter = URLEncoder.encode("user_id", "UTF-8") + "=" + URLEncoder.encode(userInputID, "UTF-8");
                             parameter += "&" + URLEncoder.encode("user_password", "UTF-8") + "=" + URLEncoder.encode(userInputPW, "UTF-8");
-                            parameter += "&" + URLEncoder.encode("user_serial", "UTF-8") + "=" + URLEncoder.encode(userInputSerialNum, "UTF-8");
+                            parameter += "&" + URLEncoder.encode("serialNum", "UTF-8") + "=" + URLEncoder.encode(serialNum, "UTF-8");
 
                             OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
                             wr.write(parameter);
                             wr.flush();
                             BufferedReader rd = null;
 
-                            if (con.getResponseCode() == 200) {
+                            if (con.getResponseCode() == JOIN_PERMITTED) {
                                 // 회원가입 성공
-                                isJoinPermitted = 200+"";
+                                isJoinPermitted = JOIN_PERMITTED+"";
                             } else {
                                 // 회원가입 실패
                                 rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
+                                //isJoinPermitted= "200";
                                 isJoinPermitted= rd.readLine();
                                 Log.d("server", String.valueOf(rd.readLine()));
                             }
@@ -129,7 +132,7 @@ public class JoinActivity_Administrator extends AppCompatActivity {
     private AlertDialog createDialogBox(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        if (msg == "200") {
+        if (msg == JOIN_PERMITTED+"") {
             builder.setTitle("회원가입 성공");
 
             builder.setMessage("환영합니다! \n서비스를 이용하려면 로그인해주세요. \n\n");

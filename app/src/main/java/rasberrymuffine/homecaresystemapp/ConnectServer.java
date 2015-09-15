@@ -37,33 +37,15 @@ import javax.net.ssl.HttpsURLConnection;
  */
 public class ConnectServer {
     private AsyncTask<String, Void, Boolean> task;
-    private static String userID;
-    private static String userPW;
-    private static String resultCode;
-    private static ArrayList<ArrayList<String>> logList;
+    private String userID;
+    private String userPW;
 
-    //not use!
-    public ConnectServer() {
-        task = new CommunicationTask();
-    }
 
     public ConnectServer(AsyncTask<String, Void, Boolean> task) {
         this.task = task;
         this.task.execute();
     }
-/*
-    public void Send_Login_Info() {
-        this.task.execute();
-    }
 
-    public void Send_Join_Info() {
-        this.task.execute();
-    }
-
-    public void Get_Log() {
-        this.task.execute();
-    }
-*/
     public boolean isFinished() {
         if (task.getStatus() == AsyncTask.Status.FINISHED) return false;
         else return true;

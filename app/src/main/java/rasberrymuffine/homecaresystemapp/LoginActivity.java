@@ -82,9 +82,9 @@ public class LoginActivity extends AppCompatActivity {
                             wr.flush();
                             BufferedReader rd = null;
 
-                            if (con.getResponseCode() == 200) {
+                            if (con.getResponseCode() == LOGIN_PERMITTED) {
                                 // 로그인 성공
-                                isLoginPermitted = 200+"";
+                                isLoginPermitted = LOGIN_PERMITTED+"";
                             } else {
                                 // 로그인 실패
                                 rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
@@ -101,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     protected void onPostExecute(Boolean aBoolean) {
-                        if (isLoginPermitted=="200") {
+                        if (isLoginPermitted==LOGIN_PERMITTED+"") {
 
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivityForResult(intent, REQUEST_CODE_MAIN);
