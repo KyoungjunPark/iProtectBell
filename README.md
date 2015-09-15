@@ -1,29 +1,25 @@
-# README #
+### Protocol ###
 
-This README would normally document whatever steps are necessary to get your application up and running.
 
-### What is this repository for? ###
+#get log
+url: ip:5000/log
+methods: GET
+parameter: no
+return: json list of logs
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+#login
+url: ip:5000/login
+methods: POST
+parameter: user_id, user_password
+return: token(200) or 404
 
-### How do I get set up? ###
+#join
+url: ip:5000/join
+methods: POST
+parameter: user_id, user_password, serialNum
+return: 200 or 404
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+#send log
+url: ip:5000/send_log
+parameter: date, information, importance
+return: 200 or 404(not critical)

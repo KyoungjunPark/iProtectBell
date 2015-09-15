@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +32,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Calendar;
 
 import static android.widget.Toast.LENGTH_LONG;
 
@@ -109,11 +111,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showFullScreen() {
+        DisplayMetrics displayMatrics = new DisplayMetrics();
+
+        int height = getWindowManager().getDefaultDisplay().getHeight();
+        int width = getWindowManager().getDefaultDisplay().getWidth();
+        String info = height + width + "";
         Intent intent = new Intent(getApplicationContext(), FullscreenActivity.class);
         startActivityForResult(intent, REQUEST_CODE_FULLSCREEN);
+        //서버에 보내주는 method call 작성   type:전체화면 info:info(화면사이즈)
     }
 
     private void call(){
+
+        sendLogToServer("call", "call call call call");
+
         String num = "01093866983";                     // 사용자가 등록한 긴급전화번호를 사용해도 좋을듯
         try {
             Intent callIntent = new Intent(Intent.ACTION_CALL);     // ACTION_DIAL 쓰면 바로 안걸리고 다이얼창만 나타남
@@ -148,16 +159,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showLogView() {
+
+        sendLogToServer("log", "read log");
+
         Intent intent = new Intent(getApplicationContext(), LogActivity.class);
         startActivityForResult(intent, REQUEST_CODE_LOG);
     }
 
     private void speak() {
+
+        sendLogToServer("speak", "speak");
+
         Intent intent = new Intent(getApplicationContext(), SpeakActivity.class);
         startActivityForResult(intent, REQUEST_CODE_SPEAK);
     }
+    private String getDate(){
 
-    private void sentToServer(final String type) {
+        Calendar calendar = Calendar.getInstance( );
+
+        String date= calendar.get(Calendar.YEAR)+"-"+(calendar.get(Calendar.MONTH) + 1)+"-"+ calendar.get(Calendar.DAY_OF_MONTH)+" "+
+                calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE)+":"+ calendar.get(Calendar.SECOND);
+
+        return date;
+    }
+
+    private void sendLogToServer(final String type, final String information) {
         ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(String... params) {
@@ -169,7 +195,10 @@ public class MainActivity extends AppCompatActivity {
 
                     con.setRequestProperty("Accept-Language", "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
                     con.setDoOutput(true);
-                    String parameter = URLEncoder.encode("user_id", "UTF-8") + "=" + URLEncoder.encode(type, "UTF-8");
+
+                    String parameter = URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode(type, "UTF-8");
+                    parameter += "&" + URLEncoder.encode("information", "UTF-8") + "=" + URLEncoder.encode(information, "UTF-8");
+                    parameter += "&" + URLEncoder.encode("date", "UTF-8") + "=" + URLEncoder.encode(getDate(), "UTF-8");
 
                     OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
                     wr.write(parameter);
@@ -189,6 +218,40 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         ConnectServer.getInstance().execute();
+    }
+
+    private void sentVideoInfoToServer(final int myWidth, final int myHeight) {
+        ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
+
+            @Override
+            protected Boolean doInBackground(String... params) {
+
+                URL obj = null;
+                try {
+                    obj = new URL("http://165.194.104.19:5000/setting_video");
+                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                    con.setRequestProperty("Accept-Language", "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
+                    con.setDoOutput(true);
+                    String parameter = URLEncoder.encode("width", "UTF-8") + "=" + URLEncoder.encode(myWidth+"", "UTF-8");
+                    parameter += "&" + URLEncoder.encode("height", "UTF-8") + "=" + URLEncoder.encode(myHeight+"", "UTF-8");
+                    OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+                    wr.write(parameter);
+                    wr.flush();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean aBoolean) {
+
+
+            }
+        });
     }
 
     @Override

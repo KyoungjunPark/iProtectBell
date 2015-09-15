@@ -81,17 +81,15 @@ public class JoinActivity_Administrator extends AppCompatActivity {
                             } else {
                                 // 회원가입 실패
                                 rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
-                                //isJoinPermitted= "200";
+
                                 isJoinPermitted = rd.readLine();
                                 Log.d("----- server -----", String.valueOf(rd.readLine()));
                             }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
                         return null;
                     }
-
                     @Override
                     protected void onPostExecute(Boolean aBoolean) {
                         AlertDialog dialog = createDialogBox(isJoinPermitted);
