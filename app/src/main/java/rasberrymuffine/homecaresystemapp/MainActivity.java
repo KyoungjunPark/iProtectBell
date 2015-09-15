@@ -32,6 +32,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Calendar;
 
 import static android.widget.Toast.LENGTH_LONG;
 
@@ -121,6 +122,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void call(){
+
+        sendLogToServer("call", "call call call call");
+
         String num = "01093866983";                     // 사용자가 등록한 긴급전화번호를 사용해도 좋을듯
         try {
             Intent callIntent = new Intent(Intent.ACTION_CALL);     // ACTION_DIAL 쓰면 바로 안걸리고 다이얼창만 나타남
@@ -155,18 +159,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showLogView() {
+
+        sendLogToServer("log", "read log");
+
         Intent intent = new Intent(getApplicationContext(), LogActivity.class);
         startActivityForResult(intent, REQUEST_CODE_LOG);
     }
 
     private void speak() {
+
+        sendLogToServer("speak", "speak");
+
         Intent intent = new Intent(getApplicationContext(), SpeakActivity.class);
         startActivityForResult(intent, REQUEST_CODE_SPEAK);
     }
+    private String getDate(){
 
-    private void sentToServer(final String type) {
+        Calendar calendar = Calendar.getInstance( );
+
+        String date= calendar.get(Calendar.YEAR)+"-"+(calendar.get(Calendar.MONTH) + 1)+"-"+ calendar.get(Calendar.DAY_OF_MONTH)+" "+
+                calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE)+":"+ calendar.get(Calendar.SECOND);
+
+        return date;
+    }
+
+    private void sendLogToServer(final String type, final String information) {
         ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
-
             @Override
             protected Boolean doInBackground(String... params) {
 
@@ -177,7 +195,10 @@ public class MainActivity extends AppCompatActivity {
 
                     con.setRequestProperty("Accept-Language", "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
                     con.setDoOutput(true);
-                    String parameter = URLEncoder.encode("user_id", "UTF-8") + "=" + URLEncoder.encode(type, "UTF-8");
+
+                    String parameter = URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode(type, "UTF-8");
+                    parameter += "&" + URLEncoder.encode("information", "UTF-8") + "=" + URLEncoder.encode(information, "UTF-8");
+                    parameter += "&" + URLEncoder.encode("date", "UTF-8") + "=" + URLEncoder.encode(getDate(), "UTF-8");
 
                     OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
                     wr.write(parameter);
@@ -196,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        ConnectServer.getInstance().execute();
     }
 
     private void sentVideoInfoToServer(final int myWidth, final int myHeight) {

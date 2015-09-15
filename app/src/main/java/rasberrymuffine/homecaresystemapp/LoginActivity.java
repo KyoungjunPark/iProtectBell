@@ -66,35 +66,38 @@ public class LoginActivity extends AppCompatActivity {
                             obj = new URL("http://165.194.104.19:5000/login");
                             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-                            con.setRequestProperty("Accept-Language", "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
-                            con.setDoOutput(true);
-                            String parameter = URLEncoder.encode("user_id", "UTF-8") + "=" + URLEncoder.encode(userInputID, "UTF-8");
+                            //implement below code if token is send to server
+                            con = ConnectServer.getInstance().setHeader(con);
 
+                            con.setDoOutput(true);
+
+                            String parameter = URLEncoder.encode("user_id", "UTF-8") + "=" + URLEncoder.encode(userInputID, "UTF-8");
                             parameter += "&" + URLEncoder.encode("user_password", "UTF-8") + "=" + URLEncoder.encode(userInputPW, "UTF-8");
 
                             OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
                             wr.write(parameter);
                             wr.flush();
+
                             BufferedReader rd = null;
 
                             if (con.getResponseCode() == LOGIN_PERMITTED) {
                                 // 로그인 성공
+
                                 rd = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
                                 String token = rd.readLine();
                                 ConnectServer.getInstance().setToken(token);
 
                                 isLoginPermitted = LOGIN_PERMITTED+"";
+                                Log.d("---- success ----", String.valueOf(rd.readLine()));
                             } else {
                                 // 로그인 실패
                                 rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
                                 isLoginPermitted= rd.readLine();
-                                Log.d("server", String.valueOf(rd.readLine()));
+                                Log.d("---- failed ----", String.valueOf(rd.readLine()));
                             }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
-
                         return null;
                     }
 
@@ -115,7 +118,8 @@ public class LoginActivity extends AppCompatActivity {
 
                     }
                 });
-            //    c.Send_Login_Info();
+
+                ConnectServer.getInstance().execute();
             }
         });
         joinButton = (Button)findViewById(R.id.joinButton);
