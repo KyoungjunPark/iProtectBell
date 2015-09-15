@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -55,7 +54,7 @@ public class JoinActivity_Administrator extends AppCompatActivity {
                 userInputPW = userPW.getText().toString();
                 serialNum = userSerialNum.getText().toString();
 
-                ConnectServer c = new ConnectServer(new AsyncTask<String, Void, Boolean>() {
+                ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
                     @Override
                     protected Boolean doInBackground(String... params) {
 
@@ -78,12 +77,12 @@ public class JoinActivity_Administrator extends AppCompatActivity {
 
                             if (con.getResponseCode() == JOIN_PERMITTED) {
                                 // 회원가입 성공
-                                isJoinPermitted = JOIN_PERMITTED+"";
+                                isJoinPermitted = JOIN_PERMITTED + "";
                             } else {
                                 // 회원가입 실패
                                 rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
                                 //isJoinPermitted= "200";
-                                isJoinPermitted= rd.readLine();
+                                isJoinPermitted = rd.readLine();
                                 Log.d("----- server -----", String.valueOf(rd.readLine()));
                             }
                         } catch (IOException e) {
@@ -95,8 +94,8 @@ public class JoinActivity_Administrator extends AppCompatActivity {
 
                     @Override
                     protected void onPostExecute(Boolean aBoolean) {
-                            AlertDialog dialog = createDialogBox(isJoinPermitted);
-                            dialog.show();
+                        AlertDialog dialog = createDialogBox(isJoinPermitted);
+                        dialog.show();
                     }
                 });
              //   c.Send_Join_Info();

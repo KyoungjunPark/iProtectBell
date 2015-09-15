@@ -1,7 +1,6 @@
 package rasberrymuffine.homecaresystemapp;
 
 import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -13,16 +12,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.Socket;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -61,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
                 userInputID = idEdit.getText().toString();
                 userInputPW = pwEdit.getText().toString();
 
-                ConnectServer c = new ConnectServer(new AsyncTask<String, Void, Boolean>() {
+                ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
 
                     @Override
                     protected Boolean doInBackground(String... params) {
@@ -84,6 +79,10 @@ public class LoginActivity extends AppCompatActivity {
 
                             if (con.getResponseCode() == LOGIN_PERMITTED) {
                                 // 로그인 성공
+                                rd = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+                                String token = rd.readLine();
+                                ConnectServer.getInstance().setToken(token);
+
                                 isLoginPermitted = LOGIN_PERMITTED+"";
                             } else {
                                 // 로그인 실패

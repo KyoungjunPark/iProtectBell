@@ -8,28 +8,22 @@ import android.os.AsyncTask;
  */
 public class ConnectServer {
     private AsyncTask<String, Void, Boolean> task;
-    private String userID;
-    private String userPW;
+    private String token;
 
 
-    public ConnectServer(AsyncTask<String, Void, Boolean> task) {
+    private static final ConnectServer instance = new ConnectServer();
+
+    private ConnectServer(){}
+    public static ConnectServer getInstance(){
+        return instance;
+    }
+    public void setAsncTask(AsyncTask<String, Void, Boolean> task) {
         this.task = task;
         this.task.execute();
     }
-
+    public void setToken(String token){this.token = token;}
     public boolean isFinished() {
         if (task.getStatus() == AsyncTask.Status.FINISHED) return false;
         else return true;
     }
-
-    private static class CommunicationTask extends AsyncTask<String, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(String... params) {
-
-            return true;
-        }
-    }
-
-
 }

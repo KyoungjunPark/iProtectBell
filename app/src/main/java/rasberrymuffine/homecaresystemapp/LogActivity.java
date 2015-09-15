@@ -33,7 +33,7 @@ public class LogActivity extends Activity {
 
         res = getResources();
 
-        ConnectServer c = new ConnectServer(new AsyncTask<String, Void, Boolean>() {
+        ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
 
             private ArrayList<ArrayList<String>> logList;
             @Override
