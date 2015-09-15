@@ -38,6 +38,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
                 />
         </RelativeLayout>
         <RelativeLayout
@@ -60,6 +61,7 @@
                 android:inputType="textPassword"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
                 />
         </RelativeLayout>
         <Button

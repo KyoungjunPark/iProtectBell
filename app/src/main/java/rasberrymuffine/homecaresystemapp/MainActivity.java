@@ -3,6 +3,7 @@ package rasberrymuffine.homecaresystemapp;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -21,11 +22,22 @@ import android.widget.MediaController;
 import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.VideoView;
+////////////////////////////////////////////////////////////////////
+import com.google.android.gcm.server.Message;
+import com.google.android.gcm.server.MulticastResult;
+import com.google.android.gcm.server.Sender;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Random;
+////////////////////////////////////////////////////////////////////
 
 import static android.widget.Toast.LENGTH_LONG;
 
 public class MainActivity extends AppCompatActivity {
-
+    public static final String TAG = "MainActivity";
     /**
      * Created by 예림 on 2015-09-09.
      */
@@ -35,19 +47,32 @@ public class MainActivity extends AppCompatActivity {
     public static final int RESULT_CODE1 = 1;
     public static final int RESULT_CODE2 = 2;
 
+
     WebView videoView;
     Button fullScreenButton;
     Button callButton;
     Button speakButton;
     Button logButton;
     Switch doorControlSwitch;
-
+    /////////////////
+    Sender sender;
+    ArrayList<String> idList = new ArrayList<String>();
+    /////////////////
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         Intent fromLoginIntent = getIntent();
+
+        ///////////////////////////////////////////////////
+        sender = new Sender(GCMInfo.GOOGLE_API_KEY);
+
+        try{registerDevice();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        ///////////////////////////////////////////////////
 
         videoView = (WebView)findViewById(R.id.videoView);
         videoView.getSettings().setJavaScriptEnabled(true);
@@ -187,6 +212,38 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void registerDevice(){
+        RegisterThread registerObject = new RegisterThread();
+        registerObject.start();
+        Toast.makeText(getApplicationContext(),"기기등록이 됐습니다.",Toast.LENGTH_LONG).show();
+    }
+
+    class RegisterThread extends Thread{
+        public void run(){
+
+                GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+            String regID = null;
+            try {
+                regID = gcm.register(GCMInfo.PROJECT_ID);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            idList.clear();
+            idList.add(regID);
+
+        }
+
+    }
+
+
+    protected void onNewIntent(Context context, Intent intent){
+
+        String data = intent.getStringExtra("data");
+        //generateNotification(context, data);
+        super.onNewIntent(intent);
+    }
 
     protected void onActivityResult(int requestcode, int resultcode, Intent data) {
         super.onActivityResult(requestcode, resultcode , data);
@@ -200,7 +257,6 @@ public class MainActivity extends AppCompatActivity {
 
 
             }
-
             else{
 
             }
