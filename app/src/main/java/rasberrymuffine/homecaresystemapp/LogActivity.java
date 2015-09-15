@@ -90,7 +90,6 @@ public class LogActivity extends Activity {
                 listView.setAdapter(adapter);
             }
         });
-    //    c.Get_Log();
     }
     public static ArrayList<ArrayList<String>> jsonParse(String log){
         ArrayList<ArrayList<String>> logList = new ArrayList<ArrayList<String>>();
