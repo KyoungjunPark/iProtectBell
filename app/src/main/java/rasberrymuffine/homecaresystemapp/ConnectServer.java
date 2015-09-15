@@ -2,6 +2,8 @@ package rasberrymuffine.homecaresystemapp;
 
 import android.os.AsyncTask;
 
+import java.net.HttpURLConnection;
+
 
 /**
  * Created by 경준 on 2015-09-13.
@@ -19,11 +21,16 @@ public class ConnectServer {
     }
     public void setAsncTask(AsyncTask<String, Void, Boolean> task) {
         this.task = task;
-        this.task.execute();
     }
     public void setToken(String token){this.token = token;}
-    public boolean isFinished() {
-        if (task.getStatus() == AsyncTask.Status.FINISHED) return false;
-        else return true;
+    public void execute(){
+        this.task.execute();
+    }
+
+    public HttpURLConnection setHeader(HttpURLConnection con){
+        con.setRequestProperty("Accept-Language", "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
+        con.setRequestProperty("token",this.token);
+
+        return con;
     }
 }

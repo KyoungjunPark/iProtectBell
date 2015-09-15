@@ -178,7 +178,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendToServer(final String type, final String information) {
         ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
-
             @Override
             protected Boolean doInBackground(String... params) {
 
@@ -211,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        ConnectServer.getInstance().execute();
     }
 
     @Override

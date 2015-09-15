@@ -96,6 +96,8 @@ public class JoinActivity_Administrator extends AppCompatActivity {
                         dialog.show();
                     }
                 });
+                ConnectServer.getInstance().execute();
+
             }
         });
 
