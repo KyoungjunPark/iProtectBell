@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         fullScreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                videoView.clearView();
                 showFullScreen();
             }
         });
@@ -115,6 +116,12 @@ public class MainActivity extends AppCompatActivity {
         Dialog dialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         dialog.setContentView(webView);
         dialog.show();
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                videoView.loadUrl("http://165.194.104.19:8080/stream");
+            }
+        });
     }
 
     private void call(){
