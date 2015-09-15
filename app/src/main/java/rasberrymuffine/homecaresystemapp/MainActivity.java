@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -109,8 +110,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showFullScreen() {
+        DisplayMetrics displayMatrics = new DisplayMetrics();
+
+        int height = getWindowManager().getDefaultDisplay().getHeight();
+        int width = getWindowManager().getDefaultDisplay().getWidth();
+        String info = height + width + "";
         Intent intent = new Intent(getApplicationContext(), FullscreenActivity.class);
         startActivityForResult(intent, REQUEST_CODE_FULLSCREEN);
+        //서버에 보내주는 method call 작성   type:전체화면 info:info(화면사이즈)
     }
 
     private void call(){
@@ -172,6 +179,40 @@ public class MainActivity extends AppCompatActivity {
                     con.setDoOutput(true);
                     String parameter = URLEncoder.encode("user_id", "UTF-8") + "=" + URLEncoder.encode(type, "UTF-8");
 
+                    OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+                    wr.write(parameter);
+                    wr.flush();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean aBoolean) {
+
+
+            }
+        });
+    }
+
+    private void sentVideoInfoToServer(final int myWidth, final int myHeight) {
+        ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
+
+            @Override
+            protected Boolean doInBackground(String... params) {
+
+                URL obj = null;
+                try {
+                    obj = new URL("http://165.194.104.19:5000/setting_video");
+                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                    con.setRequestProperty("Accept-Language", "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
+                    con.setDoOutput(true);
+                    String parameter = URLEncoder.encode("width", "UTF-8") + "=" + URLEncoder.encode(myWidth+"", "UTF-8");
+                    parameter += "&" + URLEncoder.encode("height", "UTF-8") + "=" + URLEncoder.encode(myHeight+"", "UTF-8");
                     OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
                     wr.write(parameter);
                     wr.flush();
