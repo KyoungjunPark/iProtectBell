@@ -12,7 +12,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="관리자 회원가입"
-            android:id="@+id/textView8"
+            android:id="@+id/textAdminJoin"
             android:layout_margin="30dp"
             android:textColor="#ff000000"
             android:textSize="30dp"
@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="다음 항목을 입력해주세요"
-            android:id="@+id/textView12"
+            android:id="@+id/textInput"
             android:layout_row="1"
             android:layout_column="0"
             android:layout_marginLeft="30dp"
@@ -41,20 +41,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ID"
-                android:id="@+id/textView9"
+                android:id="@+id/textID"
                 android:layout_gravity="center"
-                android:layout_marginLeft="30dp"
+                android:layout_marginLeft="37dp"
                 android:textSize="20dp"
                 android:textColor="#ff000000" />
 
             <EditText
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText"
+                android:id="@+id/editID"
                 android:layout_weight="1"
                 android:layout_gravity="center"
-                android:layout_marginLeft="60dp"
+                android:layout_marginLeft="53dp"
                 android:layout_marginRight="20dp"
+                android:maxLength="10"
                 android:hint="사용할 ID를 입력해주세요" />
         </LinearLayout>
 
@@ -70,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="PW"
-                android:id="@+id/textView10"
+                android:id="@+id/textPW"
                 android:layout_marginLeft="30dp"
                 android:textSize="20dp"
                 android:textColor="#ff000000"
@@ -79,11 +80,13 @@
             <EditText
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText2"
+                android:id="@+id/editPW"
                 android:layout_weight="1"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="45dp"
+                android:maxLength="10"
                 android:hint="사용할 비밀번호를 입력해주세요"
+                android:inputType="textPassword"
                 android:layout_gravity="center" />
 
         </LinearLayout>
@@ -101,7 +104,7 @@
                 android:layout_width="83dp"
                 android:layout_height="wrap_content"
                 android:text="Serial Number"
-                android:id="@+id/textView11"
+                android:id="@+id/textSerialNumber"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="15dp"
                 android:textSize="20dp"
@@ -110,10 +113,11 @@
             <EditText
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText3"
+                android:id="@+id/editSerialNumber"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="20dp"
+                android:hint="사용하실 기기의 Serial 번호를 입력해주세요"
                 android:layout_weight="0.81" />
         </LinearLayout>
 

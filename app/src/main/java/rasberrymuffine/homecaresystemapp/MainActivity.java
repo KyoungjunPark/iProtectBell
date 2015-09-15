@@ -1,6 +1,7 @@
 package rasberrymuffine.homecaresystemapp;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.MediaController;
@@ -27,14 +29,17 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Created by 예림 on 2015-09-09.
      */
-    public static final int REQUEST_CODE_SETTING = 1003;
     public static final int REQUEST_CODE_LOG = 1001;
+    public static final int REQUEST_CODE_SPEAK = 1002;
+    public static final int REQUEST_CODE_SETTING = 1003;
+    public static final int RESULT_CODE1 = 1;
+    public static final int RESULT_CODE2 = 2;
 
     WebView videoView;
+    Button fullScreenButton;
     Button callButton;
     Button speakButton;
     Button logButton;
-    Button settingButton;
     Switch doorControlSwitch;
 
     @Override
@@ -43,12 +48,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Intent fromLoginIntent = getIntent();
-        String serialNum = fromLoginIntent.getStringExtra("serialNum");
-
-        Toast.makeText(this,serialNum+"" , LENGTH_LONG).show();
 
         videoView = (WebView)findViewById(R.id.videoView);
         videoView.getSettings().setJavaScriptEnabled(true);
+
+        fullScreenButton = (Button)findViewById(R.id.fullScreenButton);
+        fullScreenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFullScreen();
+            }
+        });
+
         videoView.loadUrl("http://165.194.104.19:8080/stream");
 
         callButton = (Button)findViewById(R.id.callButton);
@@ -59,6 +70,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         speakButton = (Button)findViewById(R.id.speakButton);
+        speakButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speak();
+            }
+        });
         logButton = (Button)findViewById(R.id.logButton);
         logButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         doorControlSwitch = (Switch)findViewById(R.id.openSwitch);
-
         doorControlSwitch.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -82,6 +98,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void showFullScreen() {
+        WebView webView = new WebView(this);
+        //webView.loadUrl("http://www.google.com/");
+        webView.loadUrl("http://165.194.104.19:8080/stream");
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+
+                return true;
+            }
+        });
+        Dialog dialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        dialog.setContentView(webView);
+        dialog.show();
     }
 
     private void call(){
@@ -124,6 +157,11 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, REQUEST_CODE_LOG);
     }
 
+    private void speak() {
+        Intent intent = new Intent(getApplicationContext(), SpeakActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_SPEAK);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -141,13 +179,32 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent = new Intent(getApplicationContext(),SettingActivity.class);
+            //intent.putExtra("noticeMethod",0);
             startActivityForResult(intent, REQUEST_CODE_SETTING);
 
             return true;
         }
 
-
         return super.onOptionsItemSelected(item);
     }
-}
 
+    protected void onActivityResult(int requestcode, int resultcode, Intent data) {
+        super.onActivityResult(requestcode, resultcode , data);
+
+        if(requestcode==REQUEST_CODE_SETTING){
+            if(resultcode==RESULT_CODE1){
+
+                Toast.makeText(getApplicationContext(),"popup이 선택됨",Toast.LENGTH_LONG).show();
+            }
+            else if(resultcode==RESULT_CODE2){
+                Toast.makeText(getApplicationContext(),"execution이 선택됨",Toast.LENGTH_LONG).show();
+
+            }
+
+            else{
+
+            }
+        }
+    }
+
+}
