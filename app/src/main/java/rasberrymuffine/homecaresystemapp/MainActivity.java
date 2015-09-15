@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
                 showFullScreen();
             }
         });
-     // 얘 잠시만 주석처리할게여...ㅎㅎ
 
         videoView.loadUrl("http://165.194.104.19:8080/stream");
 
