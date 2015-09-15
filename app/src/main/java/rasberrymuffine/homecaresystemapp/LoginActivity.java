@@ -66,7 +66,9 @@ public class LoginActivity extends AppCompatActivity {
                             obj = new URL("http://165.194.104.19:5000/login");
                             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-                            con.setRequestProperty("Accept-Language", "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
+                            //implement below code if token is send to server
+                            con = ConnectServer.getInstance().setHeader(con);
+
                             con.setDoOutput(true);
                             String parameter = URLEncoder.encode("user_id", "UTF-8") + "=" + URLEncoder.encode(userInputID, "UTF-8");
 
