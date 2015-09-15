@@ -195,10 +195,10 @@ public class MainActivity extends AppCompatActivity {
         if(requestcode==REQUEST_CODE_SETTING){
             if(resultcode==RESULT_CODE1){
 
-                Toast.makeText(getApplicationContext(),"popup이 선택됨",Toast.LENGTH_LONG).show();
+
             }
             else if(resultcode==RESULT_CODE2){
-                Toast.makeText(getApplicationContext(),"execution이 선택됨",Toast.LENGTH_LONG).show();
+
 
             }
 

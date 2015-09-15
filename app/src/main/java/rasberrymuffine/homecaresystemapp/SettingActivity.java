@@ -49,8 +49,8 @@ public class SettingActivity  extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.putExtra("notice", "popup");
-                setResult(RESULT_CODE1,intent);
-
+                setResult(RESULT_CODE1, intent);
+                Toast.makeText(getApplicationContext(),"popup이 선택됨",Toast.LENGTH_LONG).show();
             }
         });
 
@@ -61,7 +61,7 @@ public class SettingActivity  extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.putExtra("notice","execution");
                 setResult(RESULT_CODE2, intent);
-
+                Toast.makeText(getApplicationContext(),"execution이 선택됨",Toast.LENGTH_LONG).show();
             }
         });
 
