@@ -47,7 +47,11 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_FULLSCREEN = 1004;
     public static final int RESULT_CODE1 = 1;
     public static final int RESULT_CODE2 = 2;
+    public static final int VIDEO_PERMITTED = 200;
+    public static final int VIDEO_DENIED = 404;
+    private static String VIDEO_FOCUS;
 
+    String isVideoPermitted;
     WebView videoView;
     Button fullScreenButton;
     Button callButton;
@@ -63,8 +67,10 @@ public class MainActivity extends AppCompatActivity {
         Intent fromLoginIntent = getIntent();
 
         videoView = (WebView)findViewById(R.id.videoView);
-        videoView.getSettings().setJavaScriptEnabled(true);
-        videoView.loadUrl("http://165.194.104.19:8080/stream");
+
+        //videoView.getSettings().setJavaScriptEnabled(true);
+        //videoView.loadUrl("http://165.194.104.19:8080/stream");
+
         fullScreenButton = (Button)findViewById(R.id.fullScreenButton);
         fullScreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,15 +116,22 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        VIDEO_FOCUS = "videoView";
+        int width = videoView.getWidth();
+        int height = videoView.getHeight();
+        sendVideoInfoToServer(width, height);
+
+    }
+
     private void showFullScreen() {
         DisplayMetrics displayMatrics = new DisplayMetrics();
 
         int height = getWindowManager().getDefaultDisplay().getHeight();
         int width = getWindowManager().getDefaultDisplay().getWidth();
-        String info = height + width + "";
-        Intent intent = new Intent(getApplicationContext(), FullscreenActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_FULLSCREEN);
-        //서버에 보내주는 method call 작성   type:전체화면 info:info(화면사이즈)
+        sendVideoInfoToServer(width, height);
+
     }
 
     private void call(){
@@ -147,8 +160,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener(){
-            public void onClick(DialogInterface dialog, int whichButton){
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
                 doorControlSwitch.toggle();
             }
         });
@@ -220,7 +233,8 @@ public class MainActivity extends AppCompatActivity {
         ConnectServer.getInstance().execute();
     }
 
-    private void sentVideoInfoToServer(final int myWidth, final int myHeight) {
+    private void sendVideoInfoToServer(final int myWidth, final int myHeight) {
+
         ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
 
             @Override
@@ -231,27 +245,64 @@ public class MainActivity extends AppCompatActivity {
                     obj = new URL("http://165.194.104.19:5000/setting_video");
                     HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-                    con.setRequestProperty("Accept-Language", "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
+                    //implement below code if token is send to server
+                    con = ConnectServer.getInstance().setHeader(con);
+
                     con.setDoOutput(true);
-                    String parameter = URLEncoder.encode("width", "UTF-8") + "=" + URLEncoder.encode(myWidth+"", "UTF-8");
-                    parameter += "&" + URLEncoder.encode("height", "UTF-8") + "=" + URLEncoder.encode(myHeight+"", "UTF-8");
+
+                    String parameter = URLEncoder.encode("width", "UTF-8") + "=" + URLEncoder.encode(myWidth + "", "UTF-8");
+                    parameter += "&" + URLEncoder.encode("height", "UTF-8") + "=" + URLEncoder.encode(myHeight + "", "UTF-8");
+
                     OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
                     wr.write(parameter);
                     wr.flush();
 
+                    BufferedReader rd = null;
+
+                    if (con.getResponseCode() == VIDEO_PERMITTED) {
+                        // 비디오 셋팅 성공
+
+                        rd = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+                        String token = rd.readLine();
+                        ConnectServer.getInstance().setToken(token);
+
+                        isVideoPermitted = VIDEO_PERMITTED + "";
+                        Log.d("---- video success ----", String.valueOf(rd.readLine()));
+                    } else {
+                        // 비디오 셋팅 실패
+                        rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
+                        isVideoPermitted = rd.readLine();
+                        Log.d("---- video failed ----", String.valueOf(rd.readLine()));
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
                 return null;
             }
 
             @Override
             protected void onPostExecute(Boolean aBoolean) {
-
+                if (isVideoPermitted == VIDEO_PERMITTED + "") {
+                    if(VIDEO_FOCUS.compareTo("videoView")==0) {
+                        loadVideo();
+                        VIDEO_FOCUS="fullScreen";
+                    }
+                    else {
+                        VIDEO_FOCUS="videoView";
+                        Intent intent = new Intent(getApplicationContext(), FullscreenActivity.class);
+                        startActivityForResult(intent, REQUEST_CODE_FULLSCREEN);
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "서버로부터 영상을 받아오는데 실패했습니다.", Toast.LENGTH_LONG).show();
+                }
 
             }
         });
+    }
+
+    private void loadVideo() {
+        videoView.getSettings().setJavaScriptEnabled(true);
+        videoView.loadUrl("http://165.194.104.19:8080/stream");
     }
 
     @Override
