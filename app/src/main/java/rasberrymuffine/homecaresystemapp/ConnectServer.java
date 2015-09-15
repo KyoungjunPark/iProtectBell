@@ -43,40 +43,30 @@ public class ConnectServer {
     private static ArrayList<ArrayList<String>> logList;
 
     //not use!
-    public ConnectServer(){
-       task = new CommunicationTask();
+    public ConnectServer() {
+        task = new CommunicationTask();
     }
-    public ConnectServer(AsyncTask<String, Void, Boolean> task){
+
+    public ConnectServer(AsyncTask<String, Void, Boolean> task) {
         this.task = task;
+        this.task.execute();
+    }
+/*
+    public void Send_Login_Info() {
+        this.task.execute();
     }
 
-    public void Send_Login_Info(String id, String password){
-        this.task.execute("sendLoginInfo", id, password);
-    }
-
-    public static String getPermission(){
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-      //  return "200";
-       return resultCode;
-    }
-
-    public static void Send_Join_Info(String id, String password, String serialNum){
-
-        new CommunicationTask().execute("join", id, password, serialNum);
-
-    }
-    public boolean isFinished(){
-        if(task.getStatus() == AsyncTask.Status.FINISHED) return false;
-        else return true;
+    public void Send_Join_Info() {
+        this.task.execute();
     }
 
     public void Get_Log() {
-        this.task.execute("log");
+        this.task.execute();
+    }
+*/
+    public boolean isFinished() {
+        if (task.getStatus() == AsyncTask.Status.FINISHED) return false;
+        else return true;
     }
 
     private static class CommunicationTask extends AsyncTask<String, Void, Boolean> {
@@ -84,71 +74,6 @@ public class ConnectServer {
         @Override
         protected Boolean doInBackground(String... params) {
 
-            if(params[0].equals("log")) {
-
-            }else if(params[0].equals("join")){
-                URL obj = null;
-                try {
-                    obj = new URL("http://165.194.104.19:5000/join");
-
-                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-                    con.setRequestProperty("Accept-Language", "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
-                    con.setDoOutput(true);
-                    String parameter = URLEncoder.encode("user_id", "UTF-8") + "=" + URLEncoder.encode(params[1], "UTF-8");
-                    parameter += "&" + URLEncoder.encode("user_password", "UTF-8") + "=" + URLEncoder.encode(params[2], "UTF-8");
-                    parameter += "&" + URLEncoder.encode("serial_number", "UTF-8") + "=" + URLEncoder.encode(params[3], "UTF-8");
-
-                    OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-                    wr.write(parameter);
-                    wr.flush();
-                    BufferedReader rd = null;
-                    if (con.getResponseCode() == 200) {
-                        // 회원가입 성공
-                        resultCode = 200+"";
-                    } else {
-                        // 회원가입 실패
-                        rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
-                        resultCode= rd.readLine();
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }else if (params[0] == "sendLoginInfo") {
-
-                    URL obj = null;
-                    try {
-                        obj = new URL("http://165.194.104.19:5000/login");
-                        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-                        con.setRequestProperty("Accept-Language", "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
-                        con.setDoOutput(true);
-                        String parameter = URLEncoder.encode("user_id", "UTF-8") + "=" + URLEncoder.encode(params[1], "UTF-8");
-
-                        parameter += "&" + URLEncoder.encode("user_password", "UTF-8") + "=" + URLEncoder.encode(params[2], "UTF-8");
-
-                        OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-                        wr.write(parameter);
-                        wr.flush();
-                        BufferedReader rd = null;
-                        if (con.getResponseCode() == 200) {
-                            // 로그인 성공
-                            resultCode = 200+"";
-                        } else {
-                            // 로그인 실패
-                            // rd.readLine() means fail reason
-                            // so you must toast this message to user
-
-                            rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
-                            resultCode= rd.readLine();
-                            Log.d("server", String.valueOf(rd.readLine()));
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
             return true;
         }
     }
