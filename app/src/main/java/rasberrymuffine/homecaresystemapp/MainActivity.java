@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void call(){
 
-        sendToServer("call", "call call call call");
+        sendLogToServer("call", "call call call call");
 
         String num = "01093866983";                     // 사용자가 등록한 긴급전화번호를 사용해도 좋을듯
         try {
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showLogView() {
 
-        sendToServer("log", "read log");
+        sendLogToServer("log", "read log");
 
         Intent intent = new Intent(getApplicationContext(), LogActivity.class);
         startActivityForResult(intent, REQUEST_CODE_LOG);
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void speak() {
 
-        sendToServer("speak", "speak");
+        sendLogToServer("speak", "speak");
 
         Intent intent = new Intent(getApplicationContext(), SpeakActivity.class);
         startActivityForResult(intent, REQUEST_CODE_SPEAK);
@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
         return date;
     }
 
-    private void sendToServer(final String type, final String information) {
+    private void sendLogToServer(final String type, final String information) {
         ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(String... params) {
