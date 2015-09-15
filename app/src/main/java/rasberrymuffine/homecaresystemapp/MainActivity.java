@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sentToServer(final String type) {
-        ConnectServer c = new ConnectServer(new AsyncTask<String, Void, Boolean>() {
+        ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
 
             @Override
             protected Boolean doInBackground(String... params) {
