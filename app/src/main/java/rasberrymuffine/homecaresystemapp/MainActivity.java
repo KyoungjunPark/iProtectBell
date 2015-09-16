@@ -143,8 +143,8 @@ public class MainActivity extends AppCompatActivity {
     private void showFullScreen() {
         DisplayMetrics displayMatrics = new DisplayMetrics();
 
-        int height = getWindowManager().getDefaultDisplay().getHeight();
-        int width = getWindowManager().getDefaultDisplay().getWidth();
+        int width = getWindowManager().getDefaultDisplay().getHeight();
+        int height = getWindowManager().getDefaultDisplay().getWidth();
         sendVideoInfoToServer(width, height);
 
     }
@@ -284,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected Boolean doInBackground(String... params) {
-                Log.d("videoServer","doInBackground in");
+                Log.d("videoServer", "doInBackground in");
                 URL obj = null;
                 try {
                     obj = new URL("http://165.194.104.19:5000/setting_video");
@@ -331,13 +331,12 @@ public class MainActivity extends AppCompatActivity {
             protected void onPostExecute(Boolean aBoolean) {
                 Log.d("videoPost", "in");
                 if (isVideoPermitted == VIDEO_PERMITTED + "") {
-                    if(VIDEO_FOCUS.compareTo("videoView")==0) {
+                    if (VIDEO_FOCUS.compareTo("videoView") == 0) {
                         loadVideo();
-                        VIDEO_FOCUS="fullScreen";
-                        Log.d("mainVideo","set");
-                    }
-                    else {
-                        VIDEO_FOCUS="videoView";
+                        VIDEO_FOCUS = "fullScreen";
+                        Log.d("mainVideo", "set");
+                    } else {
+                        VIDEO_FOCUS = "videoView";
                         Intent intent = new Intent(getApplicationContext(), FullscreenActivity.class);
                         startActivityForResult(intent, REQUEST_CODE_FULLSCREEN);
                     }
@@ -347,11 +346,13 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        ConnectServer.getInstance().execute();
     }
 
     private void loadVideo() {
         videoView.getSettings().setJavaScriptEnabled(true);
         videoView.loadUrl("http://165.194.104.19:8080/stream");
+        videoView.setWebViewClient(new WebViewClient());
     }
 
     @Override
