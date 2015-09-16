@@ -48,12 +48,18 @@ public class MainActivity extends AppCompatActivity {
     public static final int RESULT_CODE1 = 1;
     public static final int RESULT_CODE2 = 2;
 
+    private static final int OK_CODE = 200;
+    private static final int ERROR_CODE = 404;
+
     WebView videoView;
     Button fullScreenButton;
     Button callButton;
     Button speakButton;
     Button logButton;
     Switch doorControlSwitch;
+
+    private String isOK;                    // 서버가 주는 코드( 200 / 404 )를 저장함
+    private String action;                  // log 버튼이 눌리면 log를, call이 눌리면 call을 저장한다.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,38 +68,44 @@ public class MainActivity extends AppCompatActivity {
 
         Intent fromLoginIntent = getIntent();
 
-        videoView = (WebView)findViewById(R.id.videoView);
+        videoView = (WebView) findViewById(R.id.videoView);
         videoView.getSettings().setJavaScriptEnabled(true);
         videoView.loadUrl("http://165.194.104.19:8080/stream");
-        fullScreenButton = (Button)findViewById(R.id.fullScreenButton);
+        fullScreenButton = (Button) findViewById(R.id.fullScreenButton);
         fullScreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showFullScreen();
             }
         });
-        callButton = (Button)findViewById(R.id.callButton);
+        callButton = (Button) findViewById(R.id.callButton);
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                action = "call";
+                sendLogToServer("call", "call call call call", "MAJOR");
                 call();
             }
         });
-        speakButton = (Button)findViewById(R.id.speakButton);
+        speakButton = (Button) findViewById(R.id.speakButton);
         speakButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speak();
+                action = "speak";
+                sendLogToServer("speak", "speak", "MINOR");
+                //  speak();
             }
         });
-        logButton = (Button)findViewById(R.id.logButton);
+        logButton = (Button) findViewById(R.id.logButton);
         logButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showLogView();
+                action = "log";
+                sendLogToServer("log", "read log", "MINOR");
+                // showLogView();
             }
         });
-        doorControlSwitch = (Switch)findViewById(R.id.openSwitch);
+        doorControlSwitch = (Switch) findViewById(R.id.openSwitch);
         doorControlSwitch.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -121,34 +133,33 @@ public class MainActivity extends AppCompatActivity {
         //서버에 보내주는 method call 작성   type:전체화면 info:info(화면사이즈)
     }
 
-    private void call(){
-
-        sendLogToServer("call", "call call call call","MAJOR");
+    private void call() {
 
         String num = "01093866983";                     // 사용자가 등록한 긴급전화번호를 사용해도 좋을듯
         try {
             Intent callIntent = new Intent(Intent.ACTION_CALL);     // ACTION_DIAL 쓰면 바로 안걸리고 다이얼창만 나타남
             callIntent.setData(Uri.parse("tel:" + num));
             startActivity(callIntent);
-        }catch(ActivityNotFoundException e){
+        } catch (ActivityNotFoundException e) {
             Log.e("전화를 겁니다.", "전화를 걸 수 없습니다.", e);
         }
     }
 
-    private AlertDialog createDialogBox(){
+    private AlertDialog createDialogBox() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle("Warning");
         builder.setMessage("도어락을 해제하시겠습니까?");
 
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
-            public void onClick(DialogInterface dialog, int whichButton){
-                sendLogToServer("open", "do you want to build a snowman?","MAJOR");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                action = "open";
+                sendLogToServer("open", "do you want to build a snowman?", "MAJOR");
             }
         });
 
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener(){
-            public void onClick(DialogInterface dialog, int whichButton){
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
                 doorControlSwitch.toggle();
             }
         });
@@ -160,25 +171,22 @@ public class MainActivity extends AppCompatActivity {
 
     private void showLogView() {
 
-        sendLogToServer("log", "read log", "MINOR");
-
         Intent intent = new Intent(getApplicationContext(), LogActivity.class);
         startActivityForResult(intent, REQUEST_CODE_LOG);
     }
 
     private void speak() {
 
-        sendLogToServer("speak", "speak", "MINOR");
-
         Intent intent = new Intent(getApplicationContext(), SpeakActivity.class);
         startActivityForResult(intent, REQUEST_CODE_SPEAK);
     }
-    private String getDate(){
 
-        Calendar calendar = Calendar.getInstance( );
+    private String getDate() {
 
-        String date= calendar.get(Calendar.YEAR)+"-"+(calendar.get(Calendar.MONTH) + 1)+"-"+ calendar.get(Calendar.DAY_OF_MONTH)+" "+
-                calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE)+":"+ calendar.get(Calendar.SECOND);
+        Calendar calendar = Calendar.getInstance();
+
+        String date = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + " " +
+                calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND);
 
         return date;
     }
@@ -193,18 +201,30 @@ public class MainActivity extends AppCompatActivity {
                     obj = new URL("http://165.194.104.19:5000/send_log");
                     HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
+                    con = ConnectServer.getInstance().setHeader(con);
                     con.setRequestProperty("Accept-Language", "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
                     con.setDoOutput(true);
 
                     String parameter = URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode(type, "UTF-8");
                     parameter += "&" + URLEncoder.encode("information", "UTF-8") + "=" + URLEncoder.encode(information, "UTF-8");
                     parameter += "&" + URLEncoder.encode("date", "UTF-8") + "=" + URLEncoder.encode(getDate(), "UTF-8");
-                    parameter += "&" + URLEncoder.encode("date", "UTF-8") + "=" + URLEncoder.encode(importance, "UTF-8");
+                    parameter += "&" + URLEncoder.encode("importance", "UTF-8") + "=" + URLEncoder.encode(importance, "UTF-8");
 
                     OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
                     wr.write(parameter);
                     wr.flush();
 
+                    BufferedReader rd = null;
+
+                    if (con.getResponseCode() == OK_CODE) {
+                        // OK
+                        isOK = OK_CODE + "";
+                    } else {
+                        // ERROR
+                        rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
+                        isOK = rd.readLine();
+                        Log.d("---- failed ----", String.valueOf(isOK));
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -214,8 +234,29 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Boolean aBoolean) {
-
-
+                if (isOK == OK_CODE + "") {
+                    switch (action) {
+                        case "speak":
+                            speak();
+                            break;
+                        case "log":
+                            showLogView();
+                            break;
+                        case "open":
+                            Toast.makeText(getApplicationContext(), "도어락을 해제합니다.", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            break;
+                    }
+                } else {
+                    if (action != "call") {
+                        Toast.makeText(getApplicationContext(), "연결에 실패했습니다.", Toast.LENGTH_LONG).show();
+                    }
+                    if(action == "open"){
+                        Toast.makeText(getApplicationContext(), "도어락을 해제할 수 없습니다.", Toast.LENGTH_LONG).show();
+                        doorControlSwitch.toggle();
+                    }
+                }
             }
         });
         ConnectServer.getInstance().execute();
@@ -234,8 +275,8 @@ public class MainActivity extends AppCompatActivity {
 
                     con.setRequestProperty("Accept-Language", "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
                     con.setDoOutput(true);
-                    String parameter = URLEncoder.encode("width", "UTF-8") + "=" + URLEncoder.encode(myWidth+"", "UTF-8");
-                    parameter += "&" + URLEncoder.encode("height", "UTF-8") + "=" + URLEncoder.encode(myHeight+"", "UTF-8");
+                    String parameter = URLEncoder.encode("width", "UTF-8") + "=" + URLEncoder.encode(myWidth + "", "UTF-8");
+                    parameter += "&" + URLEncoder.encode("height", "UTF-8") + "=" + URLEncoder.encode(myHeight + "", "UTF-8");
                     OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
                     wr.write(parameter);
                     wr.flush();
@@ -271,7 +312,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(getApplicationContext(),SettingActivity.class);
+            Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
             //intent.putExtra("noticeMethod",0);
             startActivityForResult(intent, REQUEST_CODE_SETTING);
 
@@ -282,19 +323,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void onActivityResult(int requestcode, int resultcode, Intent data) {
-        super.onActivityResult(requestcode, resultcode , data);
+        super.onActivityResult(requestcode, resultcode, data);
 
-        if(requestcode==REQUEST_CODE_SETTING){
-            if(resultcode==RESULT_CODE1){
+        if (requestcode == REQUEST_CODE_SETTING) {
+            if (resultcode == RESULT_CODE1) {
 
-                Toast.makeText(getApplicationContext(),"popup이 선택됨",Toast.LENGTH_LONG).show();
-            }
-            else if(resultcode==RESULT_CODE2){
-                Toast.makeText(getApplicationContext(),"execution이 선택됨",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "popup이 선택됨", Toast.LENGTH_LONG).show();
+            } else if (resultcode == RESULT_CODE2) {
+                Toast.makeText(getApplicationContext(), "execution이 선택됨", Toast.LENGTH_LONG).show();
 
-            }
-
-            else{
+            } else {
 
             }
         }
