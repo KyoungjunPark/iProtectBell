@@ -1,21 +1,26 @@
 package rasberrymuffine.homecaresystemapp;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.accessibility.AccessibilityNodeInfo;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -29,6 +34,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -75,10 +81,6 @@ public class MainActivity extends AppCompatActivity {
         Intent fromLoginIntent = getIntent();
 
         videoView = (WebView)findViewById(R.id.videoView);
-
-        //videoView.getSettings().setJavaScriptEnabled(true);
-        //videoView.loadUrl("http://165.194.104.19:8080/stream");
-
         fullScreenButton = (Button)findViewById(R.id.fullScreenButton);
         fullScreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,20 +134,55 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        VIDEO_FOCUS = "videoView";
-        int width = videoView.getWidth();
-        int height = videoView.getHeight();
-        Log.d("getVideoViewSize", "Ready");
-        sendVideoInfoToServer(width, height);
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus==true) {
+            VIDEO_FOCUS = "videoView";
+            int width = videoView.getWidth() / 2;
+            int height = videoView.getHeight() / 2;
+            Log.d("getVideoViewSize", "Ready");
+            sendVideoInfoToServer(width, height);
+        }
 
     }
 
     private void showFullScreen() {
-        DisplayMetrics displayMatrics = new DisplayMetrics();
+        //DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
+        //int width = dm.widthPixels;
+        //int height = dm.heightPixels;
 
-        int width = getWindowManager().getDefaultDisplay().getHeight();
-        int height = getWindowManager().getDefaultDisplay().getWidth();
-        sendVideoInfoToServer(width, height);
+        Display display = getWindowManager().getDefaultDisplay();
+        int realWidth;
+        int realHeight;
+
+        if (Build.VERSION.SDK_INT >= 17){
+            //new pleasant way to get real metrics
+            DisplayMetrics realMetrics = new DisplayMetrics();
+            display.getRealMetrics(realMetrics);
+            realWidth = realMetrics.widthPixels;
+            realHeight = realMetrics.heightPixels;
+
+        } else if (Build.VERSION.SDK_INT >= 14) {
+            //reflection for this weird in-between time
+            try {
+                Method mGetRawH = Display.class.getMethod("getRawHeight");
+                Method mGetRawW = Display.class.getMethod("getRawWidth");
+                realWidth = (Integer) mGetRawW.invoke(display);
+                realHeight = (Integer) mGetRawH.invoke(display);
+            } catch (Exception e) {
+                //this may not be 100% accurate, but it's all we've got
+                realWidth = display.getWidth();
+                realHeight = display.getHeight();
+                Log.e("Display Info", "Couldn't use reflection to get the real display metrics.");
+            }
+
+        } else {
+            //This should be close, as lower API devices should not have window navigation bars
+            realWidth = display.getWidth();
+            realHeight = display.getHeight();
+        }
+
+        VIDEO_FOCUS = "fullScreen";
+        sendVideoInfoToServer(realHeight/2, realWidth/2);
 
     }
 
@@ -268,7 +305,7 @@ public class MainActivity extends AppCompatActivity {
                     if (action != "call") {
                         Toast.makeText(getApplicationContext(), "연결에 실패했습니다.", Toast.LENGTH_LONG).show();
                     }
-                    if(action == "open"){
+                    if (action == "open") {
                         Toast.makeText(getApplicationContext(), "도어락을 해제할 수 없습니다.", Toast.LENGTH_LONG).show();
                         doorControlSwitch.toggle();
                     }
@@ -333,10 +370,9 @@ public class MainActivity extends AppCompatActivity {
                 if (isVideoPermitted == VIDEO_PERMITTED + "") {
                     if (VIDEO_FOCUS.compareTo("videoView") == 0) {
                         loadVideo();
-                        VIDEO_FOCUS = "fullScreen";
+                        //VIDEO_FOCUS = "fullScreen";
                         Log.d("mainVideo", "set");
                     } else {
-                        VIDEO_FOCUS = "videoView";
                         Intent intent = new Intent(getApplicationContext(), FullscreenActivity.class);
                         startActivityForResult(intent, REQUEST_CODE_FULLSCREEN);
                     }
