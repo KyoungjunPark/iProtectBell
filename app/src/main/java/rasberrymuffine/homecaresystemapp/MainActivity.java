@@ -51,13 +51,12 @@ public class MainActivity extends AppCompatActivity {
     public static final int VIDEO_DENIED = 404;
     private static String VIDEO_FOCUS;
 
-<<<<<<< HEAD
     private static final int OK_CODE = 200;
     private static final int ERROR_CODE = 404;
 
-=======
+
     String isVideoPermitted;
->>>>>>> cea915b5712640599865d7f5b345690ecc394ba6
+
     WebView videoView;
     Button fullScreenButton;
     Button callButton;
@@ -75,19 +74,12 @@ public class MainActivity extends AppCompatActivity {
 
         Intent fromLoginIntent = getIntent();
 
-<<<<<<< HEAD
-        videoView = (WebView) findViewById(R.id.videoView);
-        videoView.getSettings().setJavaScriptEnabled(true);
-        videoView.loadUrl("http://165.194.104.19:8080/stream");
-        fullScreenButton = (Button) findViewById(R.id.fullScreenButton);
-=======
         videoView = (WebView)findViewById(R.id.videoView);
 
         //videoView.getSettings().setJavaScriptEnabled(true);
         //videoView.loadUrl("http://165.194.104.19:8080/stream");
 
         fullScreenButton = (Button)findViewById(R.id.fullScreenButton);
->>>>>>> cea915b5712640599865d7f5b345690ecc394ba6
         fullScreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -301,15 +293,11 @@ public class MainActivity extends AppCompatActivity {
                     con = ConnectServer.getInstance().setHeader(con);
 
                     con.setDoOutput(true);
-<<<<<<< HEAD
-                    String parameter = URLEncoder.encode("width", "UTF-8") + "=" + URLEncoder.encode(myWidth + "", "UTF-8");
-                    parameter += "&" + URLEncoder.encode("height", "UTF-8") + "=" + URLEncoder.encode(myHeight + "", "UTF-8");
-=======
+
 
                     String parameter = URLEncoder.encode("width", "UTF-8") + "=" + URLEncoder.encode(myWidth + "", "UTF-8");
                     parameter += "&" + URLEncoder.encode("height", "UTF-8") + "=" + URLEncoder.encode(myHeight + "", "UTF-8");
 
->>>>>>> cea915b5712640599865d7f5b345690ecc394ba6
                     OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
                     wr.write(parameter);
                     wr.flush();
