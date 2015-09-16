@@ -58,6 +58,7 @@ public class LogActivity extends Activity {
 
             @Override
             protected void onPostExecute(Boolean aBoolean) {
+            if(logList!=null) {
                 for (int i = 0; i < logList.size(); i++) {
                     // index 1번이 type
                     switch (logList.get(i).get(1)) {
@@ -89,6 +90,7 @@ public class LogActivity extends Activity {
                             break;
                     }
                 }
+            }
                 listView.setAdapter(adapter);
             }
         });
