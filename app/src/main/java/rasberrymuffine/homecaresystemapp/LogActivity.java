@@ -36,6 +36,7 @@ public class LogActivity extends Activity {
         ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
 
             private ArrayList<ArrayList<String>> logList;
+
             @Override
             protected Boolean doInBackground(String... params) {
                 try {
@@ -45,7 +46,7 @@ public class LogActivity extends Activity {
                     String line;
                     String log = "";
                     while ((line = rd.readLine()) != null) {
-                        log+=line;
+                        log += line;
                     }
                     logList = jsonParse(log);
 
@@ -54,34 +55,35 @@ public class LogActivity extends Activity {
                 }
                 return true;
             }
+
             @Override
             protected void onPostExecute(Boolean aBoolean) {
                 for (int i = 0; i < logList.size(); i++) {
                     // index 1번이 type
                     switch (logList.get(i).get(1)) {
                         case "call": // 신고
-                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.siren), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
+                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.siren), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
                             break;
                         case "off": // 종료
-                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.logoff), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
+                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.logoff), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
                             break;
                         case "speak":
-                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.white_speaker), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
+                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.white_speaker), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
                             break;
                         case "open":
-                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.opened), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
+                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.opened), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
                             break;
                         case "close":
-                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.closed), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
+                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.closed), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
                             break;
                         case "login":
-                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.login), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
+                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.login), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
                             break;
                         case "logoff":
-                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.logoff), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
+                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.logoff), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
                             break;
                         case "log":
-                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.white_log), logList.get(i).get(0), logList.get(i).get(1), logList.get(i).get(2)));
+                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.white_log), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
                             break;
                         default:
                             break;
