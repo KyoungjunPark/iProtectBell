@@ -12,11 +12,10 @@ import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -26,6 +25,8 @@ public class LogActivity extends Activity {
     ListView listView;
     LogListAdapter adapter;
     Resources res;
+    public static final int LOGIN_PERMITTED = 200;
+    public static final int LOGIN_DENIED = 404;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,61 +47,74 @@ public class LogActivity extends Activity {
                     URL url = new URL("http://165.194.104.19:5000/log");
 
                     HttpURLConnection con = (HttpURLConnection) url.openConnection();
-
                     con = ConnectServer.getInstance().setHeader(con);
-                    con.setDoOutput(true);
+                    con.setRequestMethod("GET");
+                    con.setDoInput(true);
 
-                    BufferedReader rd = new BufferedReader(new InputStreamReader(url.openStream()));
+                    con.connect();
+                    InputStream is = con.getInputStream();
 
-                    String line;
-                    String log = "";
-                    while ((line = rd.readLine()) != null) {
-                        log += line;
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                    if (con.getResponseCode() == LOGIN_PERMITTED) {
+
+                        String line;
+                        String log = "";
+                        while ((line = reader.readLine()) != null) {
+                            log += line;
+                        }
+                        logList = jsonParse(log);
+
+                        return true;
+                    } else {
+                        Log.d("---- failed ----", String.valueOf(reader.readLine()));
+
+                        return false;
                     }
-                    logList = jsonParse(log);
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                return true;
+                return false;
             }
 
             @Override
             protected void onPostExecute(Boolean aBoolean) {
-            if(logList!=null) {
-                for (int i = 0; i < logList.size(); i++) {
-                    // index 1번이 type
-                    switch (logList.get(i).get(1)) {
-                        case "call": // 신고
-                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.siren), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
-                            break;
-                        case "off": // 종료
-                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.logoff), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
-                            break;
-                        case "speak":
-                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.white_speaker), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
-                            break;
-                        case "open":
-                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.opened), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
-                            break;
-                        case "close":
-                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.closed), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
-                            break;
-                        case "login":
-                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.login), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
-                            break;
-                        case "logoff":
-                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.logoff), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
-                            break;
-                        case "log":
-                            adapter.addItem(new LogItem(res.getDrawable(R.drawable.white_log), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
-                            break;
-                        default:
-                            break;
+                if (aBoolean) {
+                    if (logList != null) {
+                        for (int i = 0; i < logList.size(); i++) {
+                            // index 1번이 type
+                            switch (logList.get(i).get(1)) {
+                                case "call": // 신고
+                                    adapter.addItem(new LogItem(res.getDrawable(R.drawable.siren), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
+                                    break;
+                                case "off": // 종료
+                                    adapter.addItem(new LogItem(res.getDrawable(R.drawable.logoff), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
+                                    break;
+                                case "speak":
+                                    adapter.addItem(new LogItem(res.getDrawable(R.drawable.white_speaker), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
+                                    break;
+                                case "open":
+                                    adapter.addItem(new LogItem(res.getDrawable(R.drawable.opened), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
+                                    break;
+                                case "close":
+                                    adapter.addItem(new LogItem(res.getDrawable(R.drawable.closed), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
+                                    break;
+                                case "login":
+                                    adapter.addItem(new LogItem(res.getDrawable(R.drawable.login), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
+                                    break;
+                                case "logoff":
+                                    adapter.addItem(new LogItem(res.getDrawable(R.drawable.logoff), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
+                                    break;
+                                case "log":
+                                    adapter.addItem(new LogItem(res.getDrawable(R.drawable.white_log), logList.get(i).get(0), logList.get(i).get(2), logList.get(i).get(3)));
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        listView.setAdapter(adapter);
                     }
                 }
-            }
-                listView.setAdapter(adapter);
             }
         });
         ConnectServer.getInstance().execute();
