@@ -29,3 +29,9 @@ return: 200 or 404(not critical)
 url: ip:5000/setting_video
 methods: POST
 parameter: width, height
+
+#door control
+url : ip:5000/door
+methods: POST
+parameter: status(1 or 0) [1 means open // 0 means close]
+return 200 or 404
