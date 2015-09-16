@@ -13,7 +13,10 @@ import org.json.JSONException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -41,6 +44,12 @@ public class LogActivity extends Activity {
             protected Boolean doInBackground(String... params) {
                 try {
                     URL url = new URL("http://165.194.104.19:5000/log");
+
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+                    con = ConnectServer.getInstance().setHeader(con);
+                    con.setDoOutput(true);
+
                     BufferedReader rd = new BufferedReader(new InputStreamReader(url.openStream()));
 
                     String line;

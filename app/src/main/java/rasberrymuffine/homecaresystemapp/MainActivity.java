@@ -146,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
         int width = getWindowManager().getDefaultDisplay().getWidth();
         sendVideoInfoToServer(width, height);
 
+
     }
 
     private void call() {
