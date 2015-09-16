@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         VIDEO_FOCUS = "videoView";
         int width = videoView.getWidth();
         int height = videoView.getHeight();
+        Log.d("getVideoViewSize", "Ready");
         sendVideoInfoToServer(width, height);
 
     }
@@ -234,12 +235,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sendVideoInfoToServer(final int myWidth, final int myHeight) {
-
+        Log.d("videoServer", "in");
         ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
 
             @Override
             protected Boolean doInBackground(String... params) {
-
+                Log.d("videoServer","doInBackground in");
                 URL obj = null;
                 try {
                     obj = new URL("http://165.194.104.19:5000/setting_video");
@@ -256,6 +257,7 @@ public class MainActivity extends AppCompatActivity {
                     OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
                     wr.write(parameter);
                     wr.flush();
+                    Log.d("videoServer", "outputToServer");
 
                     BufferedReader rd = null;
 
@@ -282,10 +284,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Boolean aBoolean) {
+                Log.d("videoPost", "in");
                 if (isVideoPermitted == VIDEO_PERMITTED + "") {
                     if(VIDEO_FOCUS.compareTo("videoView")==0) {
                         loadVideo();
                         VIDEO_FOCUS="fullScreen";
+                        Log.d("mainVideo","set");
                     }
                     else {
                         VIDEO_FOCUS="videoView";
