@@ -53,9 +53,13 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int OK_CODE = 200;
     private static final int ERROR_CODE = 404;
+    private static final int OPEN_DOOR = 1;
+    private static final int CLOSE_DOOR = 0;
+
 
 
     String isVideoPermitted;
+    String isOpenPermitted;
 
     WebView videoView;
     Button fullScreenButton;
@@ -74,12 +78,12 @@ public class MainActivity extends AppCompatActivity {
 
         Intent fromLoginIntent = getIntent();
 
-        videoView = (WebView)findViewById(R.id.videoView);
+        videoView = (WebView) findViewById(R.id.videoView);
 
         //videoView.getSettings().setJavaScriptEnabled(true);
         //videoView.loadUrl("http://165.194.104.19:8080/stream");
 
-        fullScreenButton = (Button)findViewById(R.id.fullScreenButton);
+        fullScreenButton = (Button) findViewById(R.id.fullScreenButton);
         fullScreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,7 +174,57 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 action = "open";
-                sendLogToServer("open", "do you want to build a snowman?", "MAJOR");
+                ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
+                    @Override
+                    protected Boolean doInBackground(String... params) {
+
+                        URL obj = null;
+                        try {
+                            obj = new URL("http://165.194.104.19:5000/door");
+                            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                            //implement below code if token is send to server
+                            con = ConnectServer.getInstance().setHeader(con);
+
+                            con.setDoOutput(true);
+
+                            String parameter = URLEncoder.encode("status", "UTF-8") + "=" + URLEncoder.encode(OPEN_DOOR+"", "UTF-8");
+
+                            OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+                            wr.write(parameter);
+                            wr.flush();
+
+                            BufferedReader rd = null;
+
+                            if (con.getResponseCode() == OK_CODE) {
+                                // 문열기 성공
+                                isOpenPermitted = OK_CODE + "";
+                            } else {
+                                // 문열기 실패
+                                rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
+                                isOpenPermitted = rd.readLine();
+                                Log.d("---- failed ----", String.valueOf(rd.readLine()));
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Boolean aBoolean) {
+                        if (isOpenPermitted == OK_CODE + "") {
+                            action = "open";
+                            sendLogToServer("open", "open", "MAJOR");
+                        }else{
+                            Toast.makeText(getApplicationContext(), "도어락을 해제할 수 없습니다.", Toast.LENGTH_LONG).show();
+                            doorControlSwitch.toggle();
+                        }
+                    }
+                });
+
+                ConnectServer.getInstance().execute();
+
             }
         });
 
@@ -235,6 +289,7 @@ public class MainActivity extends AppCompatActivity {
                     if (con.getResponseCode() == OK_CODE) {
                         // OK
                         isOK = OK_CODE + "";
+                        Log.d("---- send ----", String.valueOf(isOK));
                     } else {
                         // ERROR
                         rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
@@ -265,12 +320,16 @@ public class MainActivity extends AppCompatActivity {
                             break;
                     }
                 } else {
-                    if (action != "call") {
-                        Toast.makeText(getApplicationContext(), "연결에 실패했습니다.", Toast.LENGTH_LONG).show();
-                    }
-                    if(action == "open"){
-                        Toast.makeText(getApplicationContext(), "도어락을 해제할 수 없습니다.", Toast.LENGTH_LONG).show();
-                        doorControlSwitch.toggle();
+                    switch (action) {
+                        case "speak":
+                            Toast.makeText(getApplicationContext(), "연결에 실패했습니다.", Toast.LENGTH_LONG).show();
+                            break;
+                        case "log":
+                            Toast.makeText(getApplicationContext(), "연결에 실패했습니다.", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            break;
+
                     }
                 }
             }
@@ -329,12 +388,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Boolean aBoolean) {
                 if (isVideoPermitted == VIDEO_PERMITTED + "") {
-                    if(VIDEO_FOCUS.compareTo("videoView")==0) {
+                    if (VIDEO_FOCUS.compareTo("videoView") == 0) {
                         loadVideo();
-                        VIDEO_FOCUS="fullScreen";
-                    }
-                    else {
-                        VIDEO_FOCUS="videoView";
+                        VIDEO_FOCUS = "fullScreen";
+                    } else {
+                        VIDEO_FOCUS = "videoView";
                         Intent intent = new Intent(getApplicationContext(), FullscreenActivity.class);
                         startActivityForResult(intent, REQUEST_CODE_FULLSCREEN);
                     }

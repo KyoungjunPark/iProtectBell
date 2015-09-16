@@ -21,6 +21,8 @@ public class LogItem{
         mIcon = icon;
 
         mData = new String[3];
+
+        // 날짜 내용 중요도 순
         mData[0] = obj01;
         mData[1] = obj02;
         mData[2] = obj03;

@@ -21,6 +21,8 @@ public class LogItemView extends RelativeLayout {
     private TextView contentItem;
     private TextView importanceItem;
 
+    private String importance;
+
     public LogItemView(Context context, LogItem aItem) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -33,9 +35,10 @@ public class LogItemView extends RelativeLayout {
         contentItem = (TextView) findViewById(R.id.contentItem);
         contentItem.setText(aItem.getData(1));
         importanceItem = (TextView) findViewById(R.id.importanceItem);
-        importanceItem.setText(aItem.getData(2));
+        importance = aItem.getData(2);
+        importanceItem.setText(importance);
 
-        switch (aItem.getData(2)){
+        switch (importance){
             case "MAJOR":
                 importanceItem.setTextColor(Color.RED);
                 break;
