@@ -11,7 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.SeekBar;
 import android.widget.Toast;
+
+import java.io.File;
 
 public class SettingActivity  extends AppCompatActivity {
 
@@ -19,11 +22,19 @@ public class SettingActivity  extends AppCompatActivity {
     public static final int RESULT_CODE2 = 2;
 
     EditText inputPhoneNumber;
-    Button phoneNumSaveButton;
+    Button settingSaveButton;
     Button developerInfoButton;
-    String phoneNumber;
+
     RadioButton popup_button;
     RadioButton execution_button;
+
+    SeekBar volumeBar;
+
+    int volume;                     // user가 설정한 볼륨의 크기
+    String phoneNumber;             // user가 설정한 긴급전화번호
+    String noticeMean;              // user가 설정한 알림 방식
+
+    File settingRecord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,25 +42,18 @@ public class SettingActivity  extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
         Intent fromMainIntent = getIntent();
 
-
         inputPhoneNumber = (EditText)findViewById(R.id.inputPhoneNumber);
-        phoneNumSaveButton = (Button)findViewById(R.id.numberSaveButton);
-        phoneNumSaveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                phoneNumber = inputPhoneNumber.getText().toString();
-                AlertDialog dialog = createDialogBox(phoneNumber);
-                dialog.show();
-            }
-        });
 
         popup_button = (RadioButton)findViewById(R.id.popupRadioButton);
         popup_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent();
                 intent.putExtra("notice", "popup");
-                setResult(RESULT_CODE1,intent);
+                setResult(RESULT_CODE1, intent);
+
+                noticeMean = "popup";
 
             }
         });
@@ -61,6 +65,8 @@ public class SettingActivity  extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.putExtra("notice","execution");
                 setResult(RESULT_CODE2, intent);
+
+                noticeMean = "execution";
 
             }
         });
@@ -75,13 +81,40 @@ public class SettingActivity  extends AppCompatActivity {
             }
         });
 
+        volumeBar = (SeekBar)findViewById(R.id.VolumeControlBar);
+        volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                volume = progress;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        settingSaveButton = (Button)findViewById(R.id.saveButton);
+        settingSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                phoneNumber = inputPhoneNumber.getText().toString();
+                AlertDialog dialog = createDialogBox(phoneNumber +" // "+ noticeMean +" // "+ volume);
+                dialog.show();
+            }
+        });
 
     }
     private AlertDialog createDialogBox(String phoneNumber) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle("확인");
-        builder.setMessage("입력한 번호는 "+phoneNumber+" 입니다.");
+        builder.setMessage("신고 시 "+phoneNumber+" 으로 연결됩니다.");
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
             }
