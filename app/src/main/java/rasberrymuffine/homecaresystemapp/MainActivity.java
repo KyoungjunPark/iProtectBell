@@ -409,8 +409,6 @@ public class MainActivity extends AppCompatActivity {
                         // 비디오 셋팅 성공
 
                         rd = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
-                        String token = rd.readLine();
-                        ConnectServer.getInstance().setToken(token);
 
                         isVideoPermitted = VIDEO_PERMITTED + "";
                         Log.d("---- video success ----", String.valueOf(rd.readLine()));
@@ -432,15 +430,10 @@ public class MainActivity extends AppCompatActivity {
                 if (isVideoPermitted == VIDEO_PERMITTED + "") {
                     if (VIDEO_FOCUS.compareTo("videoView") == 0) {
                         loadVideo();
-<<<<<<< HEAD
                         VIDEO_FOCUS = "fullScreen";
                     } else {
                         VIDEO_FOCUS = "videoView";
-=======
-                        //VIDEO_FOCUS = "fullScreen";
-                        Log.d("mainVideo", "set");
-                    } else {
->>>>>>> 41eb1346e413c9ba75269e98d636c4c8f99a2850
+
                         Intent intent = new Intent(getApplicationContext(), FullscreenActivity.class);
                         startActivityForResult(intent, REQUEST_CODE_FULLSCREEN);
                     }

@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
                                 ConnectServer.getInstance().setToken(token);
 
                                 isLoginPermitted = LOGIN_PERMITTED+"";
-                                Log.d("---- success ----", String.valueOf(rd.readLine()));
+                                Log.d("---- success ----", token);
                             } else {
                                 // 로그인 실패
                                 rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
