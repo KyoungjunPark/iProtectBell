@@ -123,12 +123,12 @@
                     android:layout_marginRight="20dp"
                     android:layout_alignLeft="@+id/textReportNumber"
                     android:layout_alignStart="@+id/textReportNumber"
-                    android:layout_toLeftOf="@+id/numberSaveButton"
-                    android:layout_toStartOf="@+id/numberSaveButton" />
+                    android:layout_toLeftOf="@+id/saveButton"
+                    android:layout_toStartOf="@+id/saveButton" />
 
                 <Button
                     style="?android:attr/buttonStyleSmall"
-                    android:id="@+id/numberSaveButton"
+                    android:id="@+id/saveButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="저장"
