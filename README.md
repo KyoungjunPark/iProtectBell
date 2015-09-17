@@ -35,3 +35,9 @@ url : ip:5000/door
 methods: POST
 parameter: status(1 or 0) [1 means open // 0 means close]
 return 200 or 404
+
+#gcm
+url : ip:5000/gcm
+methods: POST
+parameter: gcm_token
+return 200 or 404

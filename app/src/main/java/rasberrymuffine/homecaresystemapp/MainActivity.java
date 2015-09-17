@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -24,6 +25,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -60,14 +62,12 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_FULLSCREEN = 1004;
     public static final int RESULT_CODE1 = 1;
     public static final int RESULT_CODE2 = 2;
-    public static final int VIDEO_PERMITTED = 200;
-    public static final int VIDEO_DENIED = 404;
-    private static String VIDEO_FOCUS;
-
     private static final int OK_CODE = 200;
     private static final int ERROR_CODE = 404;
     private static final int OPEN_DOOR = 1;
     private static final int CLOSE_DOOR = 0;
+    
+    private static String VIDEO_FOCUS
 
     String isVideoPermitted;
     String isOpenPermitted;
@@ -214,13 +214,15 @@ public class MainActivity extends AppCompatActivity {
         super.onWindowFocusChanged(hasFocus);
         if(hasFocus) {
             VIDEO_FOCUS = "videoView";
-            int width = videoView.getWidth() / 2;
-            int height = videoView.getHeight() / 2;
+            int width = videoView.getWidth();
+            int height = videoView.getHeight();
             Log.d("getVideoViewSize", "Ready");
-            sendVideoInfoToServer(width, height);
+            //sendVideoInfoToServer(width, height);
+            loadVideo();
         }
 
     }
+
 
     private void showFullScreen() {
         //DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
@@ -259,8 +261,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         VIDEO_FOCUS = "fullScreen";
-        sendVideoInfoToServer(realHeight/2, realWidth/2);
-
+        //sendVideoInfoToServer(realHeight/2, realWidth/2);
+        Intent intent = new Intent(getApplicationContext(), FullscreenActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_FULLSCREEN);
 
     }
 
@@ -476,12 +479,12 @@ public class MainActivity extends AppCompatActivity {
 
                     BufferedReader rd = null;
 
-                    if (con.getResponseCode() == VIDEO_PERMITTED) {
+                    if (con.getResponseCode() == OK_CODE) {
                         // 비디오 셋팅 성공
 
                         rd = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
 
-                        isVideoPermitted = VIDEO_PERMITTED + "";
+                        isVideoPermitted = OK_CODE + "";
                         Log.d("---- video success ----", String.valueOf(rd.readLine()));
                     } else {
                         // 비디오 셋팅 실패
@@ -498,7 +501,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Boolean aBoolean) {
                 Log.d("videoPost", "in");
-                if (isVideoPermitted == VIDEO_PERMITTED + "") {
+                if (isVideoPermitted == OK_CODE + "") {
                     if (VIDEO_FOCUS.compareTo("videoView") == 0) {
                         loadVideo();
                         VIDEO_FOCUS = "fullScreen";
@@ -520,7 +523,16 @@ public class MainActivity extends AppCompatActivity {
     private void loadVideo() {
         videoView.getSettings().setJavaScriptEnabled(true);
         videoView.loadUrl("http://165.194.104.19:8080/stream");
+        videoView.setInitialScale(1);
+        videoView.setPadding(0, 0, 0, 0);
         videoView.setWebViewClient(new WebViewClient());
+        videoView.setBackgroundColor(Color.TRANSPARENT);
+        videoView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
+        videoView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
+        videoView.getSettings().setLoadWithOverviewMode(true);
+        videoView.getSettings().setUseWideViewPort(true);
+        videoView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+        videoView.setScrollbarFadingEnabled(false);
     }
 
     @Override
