@@ -4,14 +4,17 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -26,6 +29,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.MediaController;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -41,6 +45,9 @@ import java.net.URLEncoder;
 import java.util.Calendar;
 
 import static android.widget.Toast.LENGTH_LONG;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,8 +69,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int OPEN_DOOR = 1;
     private static final int CLOSE_DOOR = 0;
 
-
-
     String isVideoPermitted;
     String isOpenPermitted;
 
@@ -76,6 +81,11 @@ public class MainActivity extends AppCompatActivity {
 
     private String isOK;                    // 서버가 주는 코드( 200 / 404 )를 저장함
     private String action;                  // log 버튼이 눌리면 log를, call이 눌리면 call을 저장한다.
+
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private static final String TAG = "MainActivity";
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private String gcm_token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
 
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (doorControlSwitch.isChecked() == false) {
+                    if (!doorControlSwitch.isChecked()) {
                         AlertDialog dialog = createDialogBox();
                         dialog.show();
                     }
@@ -136,12 +146,73 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //for push alarm
+        registBroadcastReceiver();
+        getInstanceIdToken();
+
+        ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
+
+            @Override
+            protected Boolean doInBackground(String... params) {
+
+                URL obj = null;
+                try {
+                    obj = new URL("http://165.194.104.19:5000/gcm");
+                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                    //implement below code if token is send to server
+                    con = ConnectServer.getInstance().setHeader(con);
+
+                    con.setDoOutput(true);
+
+                    String parameter = URLEncoder.encode("register_id", "UTF-8") + "=" + URLEncoder.encode(gcm_token, "UTF-8");
+
+                    OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+                    wr.write(parameter);
+                    wr.flush();
+
+                    BufferedReader rd = null;
+
+                    if (con.getResponseCode() == 200) {
+                        Log.d(TAG,"gcm_token is sent");
+                    } else {
+                        rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
+                        Log.e(TAG,rd.readLine());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean aBoolean) {
+            }
+        });
+
+        ConnectServer.getInstance().execute();
+
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(QuickstartPreferences.REGISTRATION_READY));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(QuickstartPreferences.REGISTRATION_GENERATING));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(QuickstartPreferences.REGISTRATION_COMPLETE));
+
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if(hasFocus==true) {
+        if(hasFocus) {
             VIDEO_FOCUS = "videoView";
             int width = videoView.getWidth() / 2;
             int height = videoView.getHeight() / 2;
@@ -492,6 +563,42 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
+    }
+
+    public void getInstanceIdToken(){
+        if(checkPlayServices()){
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
+    }
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Log.i(TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public void registBroadcastReceiver(){
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+
+                if(action.equals(QuickstartPreferences.REGISTRATION_READY)){
+                }else if(action.equals(QuickstartPreferences.REGISTRATION_GENERATING)){
+                }else if(action.equals(QuickstartPreferences.REGISTRATION_COMPLETE)){
+                    gcm_token = intent.getStringExtra("token");
+                }
+            }
+        };
     }
 
 }
