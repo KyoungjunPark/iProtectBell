@@ -38,16 +38,16 @@ public class RegistrationIntentService extends IntentService{
         InstanceID instanceID = InstanceID.getInstance(this);
         String token = null;
 
-        synchronized (TAG){
-            try {
+        try {
+            synchronized (TAG){
                 String default_senderId = getString(R.string.gcm_defaultSenderId);
                 String scope = GoogleCloudMessaging.INSTANCE_ID_SCOPE;
                 token = instanceID.getToken(default_senderId, scope, null);
 
                 Log.i(TAG, "GCM Registration Token: " + token);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         Intent registrationComplete = new Intent(QuickstartPreferences.REGISTRATION_COMPLETE);
         registrationComplete.putExtra("token", token);

@@ -66,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int ERROR_CODE = 404;
     private static final int OPEN_DOOR = 1;
     private static final int CLOSE_DOOR = 0;
-    
-    private static String VIDEO_FOCUS
+
+    private static String VIDEO_FOCUS;
 
     String isVideoPermitted;
     String isOpenPermitted;
@@ -145,53 +145,8 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        //for push alarm
         registBroadcastReceiver();
         getInstanceIdToken();
-
-        ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
-
-            @Override
-            protected Boolean doInBackground(String... params) {
-
-                URL obj = null;
-                try {
-                    obj = new URL("http://165.194.104.19:5000/gcm");
-                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-                    //implement below code if token is send to server
-                    con = ConnectServer.getInstance().setHeader(con);
-
-                    con.setDoOutput(true);
-
-                    String parameter = URLEncoder.encode("register_id", "UTF-8") + "=" + URLEncoder.encode(gcm_token, "UTF-8");
-
-                    OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-                    wr.write(parameter);
-                    wr.flush();
-
-                    BufferedReader rd = null;
-
-                    if (con.getResponseCode() == 200) {
-                        Log.d(TAG,"gcm_token is sent");
-                    } else {
-                        rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
-                        Log.e(TAG,rd.readLine());
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean aBoolean) {
-            }
-        });
-
-        ConnectServer.getInstance().execute();
-
     }
 
     @Override
@@ -199,7 +154,6 @@ public class MainActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
         super.onPause();
     }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -208,7 +162,6 @@ public class MainActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(QuickstartPreferences.REGISTRATION_COMPLETE));
 
     }
-
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -222,8 +175,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
-
     private void showFullScreen() {
         //DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
         //int width = dm.widthPixels;
@@ -266,7 +217,6 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, REQUEST_CODE_FULLSCREEN);
 
     }
-
     private void call() {
 
         String num = "01093866983";                     // 사용자가 등록한 긴급전화번호를 사용해도 좋을듯
@@ -278,7 +228,6 @@ public class MainActivity extends AppCompatActivity {
             Log.e("전화를 겁니다.", "전화를 걸 수 없습니다.", e);
         }
     }
-
     private AlertDialog createDialogBox() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -352,19 +301,16 @@ public class MainActivity extends AppCompatActivity {
         return dialog;
 
     }
-
     private void showLogView() {
 
         Intent intent = new Intent(getApplicationContext(), LogActivity.class);
         startActivityForResult(intent, REQUEST_CODE_LOG);
     }
-
     private void speak() {
 
         Intent intent = new Intent(getApplicationContext(), SpeakActivity.class);
         startActivityForResult(intent, REQUEST_CODE_SPEAK);
     }
-
     private String getDate() {
 
         Calendar calendar = Calendar.getInstance();
@@ -374,7 +320,6 @@ public class MainActivity extends AppCompatActivity {
 
         return date;
     }
-
     private void sendLogToServer(final String type, final String information, final String importance) {
         ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
             @Override
@@ -450,7 +395,6 @@ public class MainActivity extends AppCompatActivity {
         });
         ConnectServer.getInstance().execute();
     }
-
     private void sendVideoInfoToServer(final int myWidth, final int myHeight) {
         Log.d("videoServer", "in");
         ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
@@ -519,7 +463,6 @@ public class MainActivity extends AppCompatActivity {
         });
         ConnectServer.getInstance().execute();
     }
-
     private void loadVideo() {
         videoView.getSettings().setJavaScriptEnabled(true);
         videoView.loadUrl("http://165.194.104.19:8080/stream");
@@ -534,14 +477,12 @@ public class MainActivity extends AppCompatActivity {
         videoView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
         videoView.setScrollbarFadingEnabled(false);
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -560,7 +501,6 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
     protected void onActivityResult(int requestcode, int resultcode, Intent data) {
         super.onActivityResult(requestcode, resultcode, data);
 
@@ -576,7 +516,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
     public void getInstanceIdToken(){
         if(checkPlayServices()){
             Intent intent = new Intent(this, RegistrationIntentService.class);
@@ -607,7 +546,48 @@ public class MainActivity extends AppCompatActivity {
                 if(action.equals(QuickstartPreferences.REGISTRATION_READY)){
                 }else if(action.equals(QuickstartPreferences.REGISTRATION_GENERATING)){
                 }else if(action.equals(QuickstartPreferences.REGISTRATION_COMPLETE)){
+                    Log.d(TAG,"token is set in gcm_token");
                     gcm_token = intent.getStringExtra("token");
+                    ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
+
+                        @Override
+                        protected Boolean doInBackground(String... params) {
+
+                            URL obj = null;
+                            try {
+                                obj = new URL("http://165.194.104.19:5000/gcm");
+                                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                                //implement below code if token is send to server
+                                con = ConnectServer.getInstance().setHeader(con);
+
+                                con.setDoOutput(true);
+
+                                String parameter = URLEncoder.encode("register_id", "UTF-8") + "=" + URLEncoder.encode(gcm_token, "UTF-8");
+
+                                OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+                                wr.write(parameter);
+                                wr.flush();
+
+                                BufferedReader rd = null;
+
+                                if (con.getResponseCode() == 200) {
+                                    Log.d(TAG,"gcm_token is sent");
+                                } else {
+                                    rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
+                                    Log.e(TAG,rd.readLine());
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }
+                        @Override
+                        protected void onPostExecute(Boolean aBoolean) {
+                        }
+                    });
+                    ConnectServer.getInstance().execute();
+
                 }
             }
         };
