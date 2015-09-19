@@ -1,109 +1,73 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_page"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+    tools:context=".MainActivity">
 
     <RelativeLayout
-        android:id="@+id/inputContents"
+        android:id="@+id/userInputContent"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="180dp"
-        android:paddingLeft="10dp"
-        >
-        <RelativeLayout
-            android:id="@+id/idContents"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:weightSum="1"
-            android:layout_alignLeft="@+id/pwContents"
-            android:layout_alignStart="@+id/pwContents"
-            android:layout_alignRight="@+id/pwContents"
-            android:layout_alignEnd="@+id/pwContents">
-            <TextView
-                android:id="@+id/idText"
-                android:text="ID"
-                android:layout_marginRight="10dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
-            <EditText
-                android:id="@+id/idEdit"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                />
-        </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/pwContents"
-            android:layout_below="@+id/idContents"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:weightSum="1">
-            <TextView
-                android:id="@+id/pwText"
-                android:text="Password"
-                android:layout_marginRight="10dp"
-                android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
-            <EditText
-                android:id="@+id/pwEdit"
-                android:layout_toRightOf="@+id/pwText"
-                android:inputType="textPassword"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                />
-        </RelativeLayout>
-        <Button
-            android:id="@+id/loginButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Login"
-            android:layout_marginLeft="5dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignBottom="@+id/pwContents"
-            android:layout_toRightOf="@+id/idContents"
-            android:layout_toEndOf="@+id/idContents" />
+        android:layout_height="400dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true">
+
+        <EditText
+            android:id="@+id/idEdit"
+            android:layout_width="265dp"
+            android:layout_height="45dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="220dp"
+            android:hint="아이디"
+            android:textColor="#767676"
+            android:textCursorDrawable="@null"
+            android:background="@drawable/login_edittext"
+            />
+
+        <EditText
+            android:id="@+id/pwEdit"
+            android:layout_width="265dp"
+            android:layout_height="45dp"
+            android:layout_alignLeft="@+id/idEdit"
+            android:layout_below="@+id/idEdit"
+            android:layout_centerHorizontal="true"
+            android:hint="패스워드"
+            android:inputType="textPassword"
+            android:textColor="#767676"
+            android:textCursorDrawable="@null"
+            android:background="@drawable/login_edittext"
+            />
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/buttonContents"
+        android:id="@+id/buttonContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"
-        >
-        <TextView
-            android:id="@+id/joinText"
-            android:text="Haven't you joined yet?"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_centerVertical="true"
-            />
-    <Button
-        android:id="@+id/joinButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/joinText"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:text="Join"
-        />
-        </RelativeLayout>
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp">
 
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
+            android:background = "#00FF0000"
+             />
+
+        <Button
+            android:id="@+id/joinButton"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/loginButton"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:background = "#00FF0000"
+             />
+
+    </RelativeLayout>
 </RelativeLayout>
