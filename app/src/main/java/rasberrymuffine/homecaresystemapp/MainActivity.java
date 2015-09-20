@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -95,13 +96,14 @@ public class MainActivity extends AppCompatActivity {
 
         Intent fromLoginIntent = getIntent();
 
+        //getActionBar().setBackgroundDrawable(new ColorDrawable(0x00000000));
 
         videoView = (WebView)findViewById(R.id.videoView);
         fullScreenButton = (Button)findViewById(R.id.fullScreenButton);
-
         fullScreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("fullScreenButton", "clicked");
                 showFullScreen();
             }
         });
@@ -190,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
         //DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
         //int width = dm.widthPixels;
         //int height = dm.heightPixels;
-
+/*
         Display display = getWindowManager().getDefaultDisplay();
         int realWidth;
         int realHeight;
@@ -223,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         VIDEO_FOCUS = "fullScreen";
-        //sendVideoInfoToServer(realHeight/2, realWidth/2);
+        sendVideoInfoToServer(realHeight/2, realWidth/2);*/
         Intent intent = new Intent(getApplicationContext(), FullscreenActivity.class);
         startActivityForResult(intent, REQUEST_CODE_FULLSCREEN);
 
@@ -477,6 +479,8 @@ public class MainActivity extends AppCompatActivity {
     private void loadVideo() {
         videoView.getSettings().setJavaScriptEnabled(true);
         videoView.loadUrl("http://165.194.104.19:8080/stream");
+        videoView.setKeepScreenOn(true);
+
         videoView.setInitialScale(1);
         videoView.setPadding(0, 0, 0, 0);
         videoView.setWebViewClient(new WebViewClient());
