@@ -80,7 +80,7 @@ public class SettingActivity  extends AppCompatActivity {
 
             }
         });
-
+/*
         volumeBar = (SeekBar)findViewById(R.id.VolumeControlBar);
         volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -98,7 +98,7 @@ public class SettingActivity  extends AppCompatActivity {
 
             }
         });
-
+*/
         settingSaveButton = (Button)findViewById(R.id.saveButton);
         settingSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override

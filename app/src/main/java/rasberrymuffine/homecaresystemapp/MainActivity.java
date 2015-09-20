@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     Button callButton;
     Button speakButton;
     Button logButton;
+    Button settingButton;
     Switch doorControlSwitch;
 
     private String isOK;                    // 서버가 주는 코드( 200 / 404 )를 저장함
@@ -99,10 +100,10 @@ public class MainActivity extends AppCompatActivity {
 
         videoView = (WebView)findViewById(R.id.videoView);
         fullScreenButton = (Button)findViewById(R.id.fullScreenButton);
-
         fullScreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("fullScreenButton", "clicked");
                 showFullScreen();
             }
         });
@@ -131,6 +132,16 @@ public class MainActivity extends AppCompatActivity {
                 action = "log";
                 sendLogToServer("log", "read log", "MINOR");
                 // showLogView();
+            }
+        });
+
+        settingButton = (Button)findViewById(R.id.slideMenuSettingButton);
+        settingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
+                //intent.putExtra("noticeMethod",0);
+                startActivityForResult(intent, REQUEST_CODE_SETTING);
             }
         });
         doorControlSwitch = (Switch) findViewById(R.id.openSwitch);
@@ -181,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
         //DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
         //int width = dm.widthPixels;
         //int height = dm.heightPixels;
-
+/*
         Display display = getWindowManager().getDefaultDisplay();
         int realWidth;
         int realHeight;
@@ -214,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         VIDEO_FOCUS = "fullScreen";
-        //sendVideoInfoToServer(realHeight/2, realWidth/2);
+        sendVideoInfoToServer(realHeight/2, realWidth/2);*/
         Intent intent = new Intent(getApplicationContext(), FullscreenActivity.class);
         startActivityForResult(intent, REQUEST_CODE_FULLSCREEN);
 
@@ -468,6 +479,8 @@ public class MainActivity extends AppCompatActivity {
     private void loadVideo() {
         videoView.getSettings().setJavaScriptEnabled(true);
         videoView.loadUrl("http://165.194.104.19:8080/stream");
+        videoView.setKeepScreenOn(true);
+
         videoView.setInitialScale(1);
         videoView.setPadding(0, 0, 0, 0);
         videoView.setWebViewClient(new WebViewClient());
@@ -494,9 +507,6 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
-            //intent.putExtra("noticeMethod",0);
-            startActivityForResult(intent, REQUEST_CODE_SETTING);
 
             return true;
         }
