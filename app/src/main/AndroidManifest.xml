@@ -24,7 +24,8 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".MainActivity" ></activity>
+        <activity android:name=".MainActivity" >
+           </activity>
         <activity android:name=".JoinActivity"/>
         <activity android:name=".SettingActivity"/>
         <activity android:name=".JoinActivity_Administrator"/>

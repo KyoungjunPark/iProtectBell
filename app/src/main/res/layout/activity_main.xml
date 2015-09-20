@@ -4,39 +4,34 @@
     android:layout_height="match_parent"
     android:background="#ffffff"
     android:orientation="vertical">
-
+    <Button
+        android:id="@+id/callButton"
+        android:layout_width="120dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="25dp"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/call_button" />
     <FrameLayout
         android:id="@+id/viewLayout"
         android:layout_width="match_parent"
-        android:layout_height="480dp"
+        android:layout_height="350dp"
         android:paddingTop="150dp">
 
         <WebView
             android:id="@+id/videoView"
             android:layout_width="match_parent"
-            android:layout_height="480dp" />
+            android:layout_height="match_parent" />
 
+        <Button
+            android:id="@+id/fullScreenButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="175dp"
+            android:background="@drawable/full_screen_icon_yellow" />
     </FrameLayout>
-
-    <Button
-        android:id="@+id/speakButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="right"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/speaker_icon_yellow" />
-
-    <Button
-        android:id="@+id/fullScreenButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="right"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="410dp"
-        android:background="@drawable/full_screen_icon_yellow" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -48,10 +43,9 @@
             android:id="@+id/switchContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="40dp">
+            android:layout_marginTop="70dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true">
 
             <ImageView
                 android:id="@+id/doorOpenText"
@@ -63,8 +57,8 @@
                 android:id="@+id/openSwitch"
                 android:layout_width="100dp"
                 android:layout_height="15dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_toRightOf="@+id/doorOpenText"
                 android:textSize="5dp" />
 
@@ -77,18 +71,25 @@
         </RelativeLayout>
 
         <Button
-            android:id="@+id/callButton"
-            android:layout_width="120dp"
-            android:layout_height="30dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/call_button" />
+            android:id="@+id/speakButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="right"
+            android:background="@drawable/microphone"
+            android:layout_below="@+id/switchContainer"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/speakButton"
+            android:text="음성 연결"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:textColor="#FFd0a400"/>
+
 
     </RelativeLayout>
-
     <SlidingDrawer
         android:id="@+id/slide_menu"
         android:layout_width="match_parent"
