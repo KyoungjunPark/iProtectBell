@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -94,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent fromLoginIntent = getIntent();
 
+        //getActionBar().setBackgroundDrawable(new ColorDrawable(0x00000000));
 
         videoView = (WebView)findViewById(R.id.videoView);
         fullScreenButton = (Button)findViewById(R.id.fullScreenButton);
