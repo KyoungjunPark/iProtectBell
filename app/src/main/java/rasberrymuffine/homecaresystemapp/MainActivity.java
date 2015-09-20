@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     Button callButton;
     Button speakButton;
     Button logButton;
+    Button settingButton;
     Switch doorControlSwitch;
 
     private String isOK;                    // 서버가 주는 코드( 200 / 404 )를 저장함
@@ -129,6 +130,16 @@ public class MainActivity extends AppCompatActivity {
                 action = "log";
                 sendLogToServer("log", "read log", "MINOR");
                 // showLogView();
+            }
+        });
+
+        settingButton = (Button)findViewById(R.id.slideMenuSettingButton);
+        settingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
+                //intent.putExtra("noticeMethod",0);
+                startActivityForResult(intent, REQUEST_CODE_SETTING);
             }
         });
         doorControlSwitch = (Switch) findViewById(R.id.openSwitch);
@@ -492,9 +503,6 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
-            //intent.putExtra("noticeMethod",0);
-            startActivityForResult(intent, REQUEST_CODE_SETTING);
 
             return true;
         }
