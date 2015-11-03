@@ -16,6 +16,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -41,6 +45,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private String isLoginPermitted;
 
+  //  private UserSettingInfo userSettingInfo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -58,6 +64,32 @@ public class LoginActivity extends AppCompatActivity {
                 userInputID = idEdit.getText().toString();
                 userInputPW = pwEdit.getText().toString();
 
+
+                /** 서버 꺼져있는 상태에서 테스트 하려고 여기에 넣게된 코드*/
+
+                /* 여기부터 */
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_MAIN);
+                finish();
+
+                UserSettingInfo.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
+                    @Override
+                    protected Boolean doInBackground(String... params) {
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Boolean aBoolean) {
+
+                        /** 서버통신, file I/O 대신 임시로 넣어줌 ㅎㅎㅎ 내일 짜죠 */
+                        UserSettingInfo.getInstance().setPhoneNumber("01093866983");
+                        UserSettingInfo.getInstance().setSerialNumber("RA-SP-BERRY-VERY-GOOD");
+                    }
+                });
+                UserSettingInfo.getInstance().execute();
+                /* 여기까지 */
+                /** 로그인 하려면 아래 주석 풀고, 이 코드 위치 바꿔줘야 함! */
+/*
                 ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
 
                     @Override
@@ -122,6 +154,9 @@ public class LoginActivity extends AppCompatActivity {
                 });
 
                 ConnectServer.getInstance().execute();
+
+
+                */
             }
         });
         joinButton = (Button)findViewById(R.id.joinButton);
@@ -134,6 +169,8 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
 
     }
   

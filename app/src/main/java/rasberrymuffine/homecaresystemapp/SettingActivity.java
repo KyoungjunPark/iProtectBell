@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -22,6 +23,8 @@ public class SettingActivity  extends AppCompatActivity {
     public static final int RESULT_CODE2 = 2;
 
     EditText inputPhoneNumber;
+    TextView serialNumber;
+
     Button settingSaveButton;
     Button developerInfoButton;
 
@@ -43,6 +46,11 @@ public class SettingActivity  extends AppCompatActivity {
         Intent fromMainIntent = getIntent();
 
         inputPhoneNumber = (EditText)findViewById(R.id.inputPhoneNumber);
+        phoneNumber=UserSettingInfo.getInstance().getPhoneNumber();
+        inputPhoneNumber.setText(phoneNumber);
+
+        serialNumber = (TextView)findViewById(R.id.userSerialNumber);
+        serialNumber.setText(UserSettingInfo.getInstance().getSerialNumber());
 
         popup_button = (RadioButton)findViewById(R.id.popupRadioButton);
         popup_button.setOnClickListener(new View.OnClickListener(){
@@ -104,6 +112,7 @@ public class SettingActivity  extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 phoneNumber = inputPhoneNumber.getText().toString();
+                UserSettingInfo.getInstance().setPhoneNumber(phoneNumber);
                 AlertDialog dialog = createDialogBox(phoneNumber +" // "+ noticeMean +" // "+ volume);
                 dialog.show();
             }
