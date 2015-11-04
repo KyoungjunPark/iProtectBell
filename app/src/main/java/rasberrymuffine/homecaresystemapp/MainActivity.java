@@ -33,6 +33,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
+import android.widget.SlidingDrawer;
 import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -78,8 +79,10 @@ public class MainActivity extends AppCompatActivity {
     Button callButton;
     Button speakButton;
     Button logButton;
-    Button settingButton;
     Switch doorControlSwitch;
+
+    Button settingButton;
+    SlidingDrawer slidingDrawer;            //.animateClose()
 
     private String isOK;                    // 서버가 주는 코드( 200 / 404 )를 저장함
     private String action;                  // log 버튼이 눌리면 log를, call이 눌리면 call을 저장한다.
@@ -139,11 +142,16 @@ public class MainActivity extends AppCompatActivity {
         settingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                slidingDrawer = (SlidingDrawer)findViewById(R.id.slide_menu);
+                slidingDrawer.animateClose();
                 Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
                 //intent.putExtra("noticeMethod",0);
                 startActivityForResult(intent, REQUEST_CODE_SETTING);
             }
         });
+
+
         doorControlSwitch = (Switch) findViewById(R.id.openSwitch);
         doorControlSwitch.setOnTouchListener(new View.OnTouchListener() {
             @Override
