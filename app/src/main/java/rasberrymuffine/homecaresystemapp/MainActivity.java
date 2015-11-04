@@ -232,10 +232,10 @@ public class MainActivity extends AppCompatActivity {
     }
     private void call() {
 
-        String num = "01093866983";                     // 사용자가 등록한 긴급전화번호를 사용해도 좋을듯
+        String callNumber = UserSettingInfo.getInstance().getPhoneNumber();
         try {
             Intent callIntent = new Intent(Intent.ACTION_CALL);     // ACTION_DIAL 쓰면 바로 안걸리고 다이얼창만 나타남
-            callIntent.setData(Uri.parse("tel:" + num));
+            callIntent.setData(Uri.parse("tel:" + callNumber));
             startActivity(callIntent);
         } catch (ActivityNotFoundException e) {
             Log.e("전화를 겁니다.", "전화를 걸 수 없습니다.", e);
