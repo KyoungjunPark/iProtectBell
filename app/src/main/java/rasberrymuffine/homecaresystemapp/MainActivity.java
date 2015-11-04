@@ -498,6 +498,8 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -528,6 +530,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+
     public void getInstanceIdToken(){
         if(checkPlayServices()){
             Intent intent = new Intent(this, RegistrationIntentService.class);
