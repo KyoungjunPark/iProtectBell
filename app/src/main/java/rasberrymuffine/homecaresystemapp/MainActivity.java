@@ -506,6 +506,8 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -521,21 +523,26 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    protected void onActivityResult(int requestcode, int resultcode, Intent data) {
+
+    /*protected void onActivityResult(int requestcode, int resultcode, Intent data) {
         super.onActivityResult(requestcode, resultcode, data);
 
         if (requestcode == REQUEST_CODE_SETTING) {
             if (resultcode == RESULT_CODE1) {
 
-                Toast.makeText(getApplicationContext(), "popup이 선택됨", Toast.LENGTH_LONG).show();
+
+
             } else if (resultcode == RESULT_CODE2) {
-                Toast.makeText(getApplicationContext(), "execution이 선택됨", Toast.LENGTH_LONG).show();
+
+
 
             } else {
 
             }
         }
-    }
+    }*/
+
+
     public void getInstanceIdToken(){
         if(checkPlayServices()){
             Intent intent = new Intent(this, RegistrationIntentService.class);

@@ -49,6 +49,7 @@ public class SettingActivity  extends AppCompatActivity {
         phoneNumber=UserSettingInfo.getInstance().getPhoneNumber();
         inputPhoneNumber.setText(phoneNumber);
 
+
         serialNumber = (TextView)findViewById(R.id.userSerialNumber);
         serialNumber.setText(UserSettingInfo.getInstance().getSerialNumber());
 
@@ -56,13 +57,8 @@ public class SettingActivity  extends AppCompatActivity {
         popup_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-
-                Intent intent = new Intent();
-                intent.putExtra("notice", "popup");
-                setResult(RESULT_CODE1, intent);
-
-                noticeMean = "popup";
-
+                UserSettingInfo INFO = new UserSettingInfo();
+                INFO.setAlarmType("pushalarm");
             }
         });
 
@@ -70,12 +66,8 @@ public class SettingActivity  extends AppCompatActivity {
         execution_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.putExtra("notice","execution");
-                setResult(RESULT_CODE2, intent);
-
-                noticeMean = "execution";
-
+                UserSettingInfo INFO = new UserSettingInfo();
+                INFO.setAlarmType("execution");
             }
         });
 

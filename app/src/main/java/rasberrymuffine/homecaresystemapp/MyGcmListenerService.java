@@ -1,8 +1,10 @@
 package rasberrymuffine.homecaresystemapp;
 
+import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -26,9 +28,19 @@ public class MyGcmListenerService extends GcmListenerService{
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Title: " + title);
         Log.d(TAG, "Message: " + message);
-
         // GCM으로 받은 메세지를 디바이스에 알려주는 sendNotification()을 호출한다.
+        UserSettingInfo Sinfo = new UserSettingInfo();
+
+        if(Sinfo.getAlarmType()=="pushalarm"){
         sendNotification(title, message);
+        AlertDialog dialog = createDialogBox();
+        dialog.show();
+        }
+        else if(Sinfo.getAlarmType()=="execution"){
+            sendNotification(title, message);
+            sendBroadcast(new Intent("EXECUTION"));
+        }
+
     }
 
     private void sendNotification(String title, String message) {
@@ -51,4 +63,25 @@ public class MyGcmListenerService extends GcmListenerService{
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
+
+    private AlertDialog createDialogBox(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("WHOOZ COME");
+        builder.setMessage("방문자가 있습니다.");
+        builder.setIcon(R.drawable.login_page_background);
+
+        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+
+        return dialog;
+    }
+
 }
+
