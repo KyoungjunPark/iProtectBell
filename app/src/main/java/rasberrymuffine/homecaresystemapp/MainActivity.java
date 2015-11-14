@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -32,6 +33,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
+import android.widget.SlidingDrawer;
 import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -79,6 +81,9 @@ public class MainActivity extends AppCompatActivity {
     Button logButton;
     Switch doorControlSwitch;
 
+    Button settingButton;
+    SlidingDrawer slidingDrawer;            //.animateClose()
+
     private String isOK;                    // 서버가 주는 코드( 200 / 404 )를 저장함
     private String action;                  // log 버튼이 눌리면 log를, call이 눌리면 call을 저장한다.
 
@@ -94,13 +99,14 @@ public class MainActivity extends AppCompatActivity {
 
         Intent fromLoginIntent = getIntent();
 
+        //getActionBar().setBackgroundDrawable(new ColorDrawable(0x00000000));
 
         videoView = (WebView)findViewById(R.id.videoView);
         fullScreenButton = (Button)findViewById(R.id.fullScreenButton);
-
         fullScreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("fullScreenButton", "clicked");
                 showFullScreen();
             }
         });
@@ -131,6 +137,21 @@ public class MainActivity extends AppCompatActivity {
                 // showLogView();
             }
         });
+
+        settingButton = (Button)findViewById(R.id.slideMenuSettingButton);
+        settingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                slidingDrawer = (SlidingDrawer)findViewById(R.id.slide_menu);
+                slidingDrawer.animateClose();
+                Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
+                //intent.putExtra("noticeMethod",0);
+                startActivityForResult(intent, REQUEST_CODE_SETTING);
+            }
+        });
+
+
         doorControlSwitch = (Switch) findViewById(R.id.openSwitch);
         doorControlSwitch.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -179,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
         //DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
         //int width = dm.widthPixels;
         //int height = dm.heightPixels;
-
+/*
         Display display = getWindowManager().getDefaultDisplay();
         int realWidth;
         int realHeight;
@@ -212,17 +233,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         VIDEO_FOCUS = "fullScreen";
-        //sendVideoInfoToServer(realHeight/2, realWidth/2);
+        sendVideoInfoToServer(realHeight/2, realWidth/2);*/
         Intent intent = new Intent(getApplicationContext(), FullscreenActivity.class);
         startActivityForResult(intent, REQUEST_CODE_FULLSCREEN);
 
     }
     private void call() {
 
-        String num = "01093866983";                     // 사용자가 등록한 긴급전화번호를 사용해도 좋을듯
+        String callNumber = UserSettingInfo.getInstance().getPhoneNumber();
         try {
             Intent callIntent = new Intent(Intent.ACTION_CALL);     // ACTION_DIAL 쓰면 바로 안걸리고 다이얼창만 나타남
-            callIntent.setData(Uri.parse("tel:" + num));
+            callIntent.setData(Uri.parse("tel:" + callNumber));
             startActivity(callIntent);
         } catch (ActivityNotFoundException e) {
             Log.e("전화를 겁니다.", "전화를 걸 수 없습니다.", e);
@@ -243,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
 
                         URL obj = null;
                         try {
-                            obj = new URL("http://165.194.104.19:5000/door");
+                            obj = new URL("http://165.194.17.4:5000/door");
                             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
                             //implement below code if token is send to server
@@ -327,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
 
                 URL obj = null;
                 try {
-                    obj = new URL("http://165.194.104.19:5000/send_log");
+                    obj = new URL("http://165.194.17.4:5000/send_log");
                     HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
                     con = ConnectServer.getInstance().setHeader(con);
@@ -404,7 +425,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("videoServer", "doInBackground in");
                 URL obj = null;
                 try {
-                    obj = new URL("http://165.194.104.19:5000/setting_video");
+                    obj = new URL("http://165.194.17.4:5000/setting_video");
                     HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
                     //implement below code if token is send to server
@@ -465,7 +486,9 @@ public class MainActivity extends AppCompatActivity {
     }
     private void loadVideo() {
         videoView.getSettings().setJavaScriptEnabled(true);
-        videoView.loadUrl("http://165.194.104.19:8080/stream");
+        videoView.loadUrl("http://165.194.17.4:8080/stream");
+        videoView.setKeepScreenOn(true);
+
         videoView.setInitialScale(1);
         videoView.setPadding(0, 0, 0, 0);
         videoView.setWebViewClient(new WebViewClient());
@@ -483,6 +506,8 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -492,30 +517,32 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
-            //intent.putExtra("noticeMethod",0);
-            startActivityForResult(intent, REQUEST_CODE_SETTING);
 
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
-    protected void onActivityResult(int requestcode, int resultcode, Intent data) {
+
+    /*protected void onActivityResult(int requestcode, int resultcode, Intent data) {
         super.onActivityResult(requestcode, resultcode, data);
 
         if (requestcode == REQUEST_CODE_SETTING) {
             if (resultcode == RESULT_CODE1) {
 
-                Toast.makeText(getApplicationContext(), "popup이 선택됨", Toast.LENGTH_LONG).show();
+
+
             } else if (resultcode == RESULT_CODE2) {
-                Toast.makeText(getApplicationContext(), "execution이 선택됨", Toast.LENGTH_LONG).show();
+
+
 
             } else {
 
             }
         }
-    }
+    }*/
+
+
     public void getInstanceIdToken(){
         if(checkPlayServices()){
             Intent intent = new Intent(this, RegistrationIntentService.class);
@@ -555,7 +582,7 @@ public class MainActivity extends AppCompatActivity {
 
                             URL obj = null;
                             try {
-                                obj = new URL("http://165.194.104.19:5000/gcm");
+                                obj = new URL("http://165.194.17.4:5000/gcm");
                                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
                                 //implement below code if token is send to server

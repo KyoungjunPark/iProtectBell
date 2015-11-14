@@ -3,17 +3,25 @@ package rasberrymuffine.homecaresystemapp;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -33,11 +41,15 @@ public class LoginActivity extends AppCompatActivity {
     private EditText pwEdit;
     private String userInputID;
     private String userInputPW;
+    private String userSerialNumber;
 
     private Button loginButton;
     private Button joinButton;
 
     private String isLoginPermitted;
+
+    private UserSettingInfo userSettingInfo;
+    private SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +57,25 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        idEdit = (EditText)findViewById(R.id.idEdit);
-        pwEdit = (EditText)findViewById(R.id.pwEdit);
+        idEdit = (EditText) findViewById(R.id.idEdit);
+        pwEdit = (EditText) findViewById(R.id.pwEdit);
 
-        loginButton = (Button)findViewById(R.id.loginButton);
+        loginButton = (Button) findViewById(R.id.loginButton);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 userInputID = idEdit.getText().toString();
                 userInputPW = pwEdit.getText().toString();
+
+
+
+/*
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_MAIN);
+                finish();
+*/
+
 
                 ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
 
@@ -63,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         URL obj = null;
                         try {
-                            obj = new URL("http://165.194.104.19:5000/login");
+                            obj = new URL("http://165.194.17.4:5000/login");
                             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
                             //implement below code if token is send to server
@@ -87,12 +108,33 @@ public class LoginActivity extends AppCompatActivity {
                                 String token = rd.readLine();
                                 ConnectServer.getInstance().setToken(token);
 
-                                isLoginPermitted = LOGIN_PERMITTED+"";
+
+                                isLoginPermitted = LOGIN_PERMITTED + "";
                                 Log.d("---- success ----", token);
+
+                                createDatabase();
+                                setSettings();
+
+                                UserSettingInfo.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
+                                    @Override
+                                    protected Boolean doInBackground(String... params) {
+                                        return null;
+                                    }
+
+                                    @Override
+                                    protected void onPostExecute(Boolean aBoolean) {
+
+                                        /** 서버통신, file I/O 대신 임시로 넣어줌 ㅎㅎㅎ 내일 짜죠 */
+                                        UserSettingInfo.getInstance().setPhoneNumber("01093866983");
+                                        UserSettingInfo.getInstance().setSerialNumber("RA-SP-BERRY-VERY-GOOD");
+                                    }
+                                });
+                                UserSettingInfo.getInstance().execute();
+
                             } else {
                                 // 로그인 실패
                                 rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
-                                isLoginPermitted= rd.readLine();
+                                isLoginPermitted = rd.readLine();
                                 Log.d("---- failed ----", String.valueOf(rd.readLine()));
                             }
                         } catch (IOException e) {
@@ -103,13 +145,11 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     protected void onPostExecute(Boolean aBoolean) {
-                        if (isLoginPermitted==LOGIN_PERMITTED+"") {
-
+                        if (isLoginPermitted == LOGIN_PERMITTED + "") {
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivityForResult(intent, REQUEST_CODE_MAIN);
                             finish();
-                        }
-                        else{
+                        } else {
                             AlertDialog dialog = createDialogBox(isLoginPermitted);
                             dialog.show();
                             idEdit.setText("");
@@ -120,9 +160,11 @@ public class LoginActivity extends AppCompatActivity {
                 });
 
                 ConnectServer.getInstance().execute();
+
+
             }
         });
-        joinButton = (Button)findViewById(R.id.joinButton);
+        joinButton = (Button) findViewById(R.id.joinButton);
         joinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,12 +175,57 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
     }
-  
+
+    private void createDatabase() {
+        try {
+            db = openOrCreateDatabase("bellSetting", MODE_WORLD_READABLE, null);
+            createSettingTable();
+            //databaseCreated = true;
+            Log.d("database", "-----created-----");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Log.e("database", "-----not created-----");
+        }
+    }
+
+    private void createSettingTable() {
+        db.execSQL("create table setting ("
+                + "ID text, "
+                + "serial_number text, "
+                + "phone_number text, "
+                + "alarm_type text);");
+    }
+
+    private void setSettings() {
+        Cursor c1 = db.rawQuery("select * from bellSetting where ID='" + userInputID + "'", null);
+        if(c1.getCount() == 0) {
+            UserSettingInfo.getInstance().setID(userInputID);
+            UserSettingInfo.getInstance().setSerialNumber(userSerialNumber);
+            UserSettingInfo.getInstance().setPhoneNumber("01093866983");
+            UserSettingInfo.getInstance().setAlarmType("0");
+            db.execSQL("insert into setting (ID, serial_number, phone_number, alarm_type) values ("
+                    + "'" + UserSettingInfo.getInstance().getID() + "', '"
+                    + UserSettingInfo.getInstance().getSerialNumber() + "', '"
+                    + UserSettingInfo.getInstance().getPhoneNumber() + "', '"
+                    + UserSettingInfo.getInstance().getAlarmType() + "');");
+
+        }
+        else {
+            UserSettingInfo.getInstance().setID(c1.getString(0));
+            UserSettingInfo.getInstance().setSerialNumber(c1.getString(1));
+            UserSettingInfo.getInstance().setPhoneNumber(c1.getString(2));
+            UserSettingInfo.getInstance().setAlarmType(c1.getString(3));
+        }
+        c1.close();
+    }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

@@ -1,80 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <WebView
-        android:id="@+id/videoView"
-        android:layout_height="220dp"
-        android:layout_width="match_parent"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginTop="70dp"
-        />
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical">
     <Button
-        android:id="@+id/fullScreenButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:text="전체화면 보기"
-        android:layout_marginTop="20dp"
-        android:layout_alignLeft="@+id/videoView"
-        android:layout_alignStart="@+id/videoView" />
-    <RelativeLayout
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/videoView"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        >
+        android:id="@+id/callButton"
+        android:layout_width="120dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="25dp"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/call_button" />
+    <FrameLayout
+        android:id="@+id/viewLayout"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:paddingTop="150dp">
+
+        <WebView
+            android:id="@+id/videoView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <Button
-            android:id="@+id/callButton"
+            android:id="@+id/fullScreenButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="175dp"
+            android:background="@drawable/full_screen_icon_yellow" />
+    </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/viewLayout"
+        android:layout_centerHorizontal="true">
+
+        <RelativeLayout
+            android:id="@+id/switchContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="50dp"
-            android:layout_marginBottom="20dp"
-            android:text="신고"
-            android:drawableRight="@drawable/siren"
-            />
+            android:layout_marginTop="70dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:id="@+id/doorOpenText"
+                android:layout_width="45dp"
+                android:layout_height="15dp"
+                android:background="@drawable/door_close" />
+
+            <Switch
+                android:id="@+id/openSwitch"
+                android:layout_width="100dp"
+                android:layout_height="15dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_toRightOf="@+id/doorOpenText"
+                android:textSize="5dp" />
+
+            <ImageView
+                android:id="@+id/doorCloseText"
+                android:layout_width="45dp"
+                android:layout_height="15dp"
+                android:layout_toRightOf="@+id/openSwitch"
+                android:background="@drawable/door_open" />
+        </RelativeLayout>
+
         <Button
             android:id="@+id/speakButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_toRightOf="@+id/callButton"
-            android:text="음성"
-            android:drawableRight="@drawable/sound"
-            />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="right"
+            android:background="@drawable/microphone"
+            android:layout_below="@+id/switchContainer"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp" />
         <TextView
-            android:id="@+id/doorText"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="Door"
-            android:layout_below="@+id/callButton"
-            android:layout_alignLeft="@+id/callButton"
-            />
-        <Switch
-            android:id="@+id/openSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="5dp"
-            android:textOff="닫힘"
-            android:textOn="열림"
-            android:layout_below="@+id/doorText"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignRight="@+id/callButton"
-            android:layout_alignEnd="@+id/callButton"
-            />
-        <Button
-            android:id="@+id/logButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Log  "
             android:layout_below="@+id/speakButton"
-            android:layout_alignRight="@+id/speakButton"
-            android:drawableRight="@drawable/log"
-            />
+            android:text="음성 연결"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:textColor="#FFd0a400"/>
     </RelativeLayout>
+    <SlidingDrawer
+        android:id="@+id/slide_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:allowSingleTap="true"
+        android:animateOnClick="true"
+        android:bottomOffset="0dp"
+        android:content="@+id/content"
+        android:handle="@+id/menu_image"
+        android:orientation="horizontal"
+        android:rotation="180"
+        android:topOffset="50dp">
+
+        <RelativeLayout
+            android:id="@+id/menu_image"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent">
+
+            <ImageView
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_alignParentBottom="true"
+                android:src="@drawable/temp_menu_yellow" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:rotation="180">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/slide_menu" />
+
+            <RelativeLayout
+                android:id="@+id/slide_menu_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/slideMenuSettingButton"
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="350dp"
+                    android:background="@null" />
+
+                <Button
+                    android:id="@+id/logButton"
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/slideMenuSettingButton"
+                    android:layout_centerHorizontal="true"
+                    android:background="@null" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </SlidingDrawer>
+
 </RelativeLayout>
