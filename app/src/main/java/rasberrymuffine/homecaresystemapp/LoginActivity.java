@@ -110,6 +110,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
                                 isLoginPermitted = LOGIN_PERMITTED + "";
+                                userSerialNumber = "RA-SP-BERRY-VERY-GOOD";
                                 Log.d("---- success ----", token);
 
                                 createDatabase();
@@ -125,8 +126,8 @@ public class LoginActivity extends AppCompatActivity {
                                     protected void onPostExecute(Boolean aBoolean) {
 
                                         /** 서버통신, file I/O 대신 임시로 넣어줌 ㅎㅎㅎ 내일 짜죠 */
-                                        UserSettingInfo.getInstance().setPhoneNumber("01093866983");
-                                        UserSettingInfo.getInstance().setSerialNumber("RA-SP-BERRY-VERY-GOOD");
+                                        //UserSettingInfo.getInstance().setPhoneNumber("01093866983");
+                                        //UserSettingInfo.getInstance().setSerialNumber("RA-SP-BERRY-VERY-GOOD");
                                     }
                                 });
                                 UserSettingInfo.getInstance().execute();
@@ -200,7 +201,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void setSettings() {
-        Cursor c1 = db.rawQuery("select * from bellSetting where ID='" + userInputID + "'", null);
+        Cursor c1 = db.rawQuery("select * from setting where ID='" + userInputID + "'", null);
         if(c1.getCount() == 0) {
             UserSettingInfo.getInstance().setID(userInputID);
             UserSettingInfo.getInstance().setSerialNumber(userSerialNumber);
@@ -214,6 +215,7 @@ public class LoginActivity extends AppCompatActivity {
 
         }
         else {
+            c1.moveToNext();
             UserSettingInfo.getInstance().setID(c1.getString(0));
             UserSettingInfo.getInstance().setSerialNumber(c1.getString(1));
             UserSettingInfo.getInstance().setPhoneNumber(c1.getString(2));

@@ -3,8 +3,11 @@ package rasberrymuffine.homecaresystemapp;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +40,7 @@ public class SettingActivity  extends AppCompatActivity {
     String phoneNumber;             // user가 설정한 긴급전화번호
     String noticeMean;              // user가 설정한 알림 방식
 
+    private SQLiteDatabase db;
     File settingRecord;
 
     @Override
@@ -57,8 +61,9 @@ public class SettingActivity  extends AppCompatActivity {
         popup_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                UserSettingInfo INFO = new UserSettingInfo();
-                INFO.setAlarmType("pushalarm");
+                //UserSettingInfo INFO = new UserSettingInfo();
+                //INFO.setAlarmType("pushalarm");
+                UserSettingInfo.getInstance().setAlarmType("0");
             }
         });
 
@@ -66,8 +71,9 @@ public class SettingActivity  extends AppCompatActivity {
         execution_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                UserSettingInfo INFO = new UserSettingInfo();
-                INFO.setAlarmType("execution");
+                //UserSettingInfo INFO = new UserSettingInfo();
+                //INFO.setAlarmType("execution");
+                UserSettingInfo.getInstance().setAlarmType("1");
             }
         });
 
@@ -105,12 +111,22 @@ public class SettingActivity  extends AppCompatActivity {
             public void onClick(View v) {
                 phoneNumber = inputPhoneNumber.getText().toString();
                 UserSettingInfo.getInstance().setPhoneNumber(phoneNumber);
+                db = openOrCreateDatabase("bellSetting", MODE_WORLD_READABLE, null);
+                Cursor c1 = db.rawQuery("select * from setting where ID='" + UserSettingInfo.getInstance().getID() + "'", null);
+                if(c1.getCount() == 1) {
+                    c1.moveToNext();
+                    db.execSQL("update setting set serial_number=" + "'" + UserSettingInfo.getInstance().getSerialNumber() + "', "
+                            + "phone_number='" + UserSettingInfo.getInstance().getPhoneNumber() + "', "
+                            + "alarm_type='" + UserSettingInfo.getInstance().getAlarmType() + "'");
+                    c1.close();
+                }
                 AlertDialog dialog = createDialogBox(phoneNumber +" // "+ noticeMean +" // "+ volume);
                 dialog.show();
             }
         });
 
     }
+
     private AlertDialog createDialogBox(String phoneNumber) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
