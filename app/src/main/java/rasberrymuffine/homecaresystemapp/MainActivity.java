@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
 
                         URL obj = null;
                         try {
-                            obj = new URL("http://165.194.104.19:5000/door");
+                            obj = new URL("http://165.194.17.4:5000/door");
                             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
                             //implement below code if token is send to server
@@ -348,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
 
                 URL obj = null;
                 try {
-                    obj = new URL("http://165.194.104.19:5000/send_log");
+                    obj = new URL("http://165.194.17.4:5000/send_log");
                     HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
                     con = ConnectServer.getInstance().setHeader(con);
@@ -425,7 +425,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("videoServer", "doInBackground in");
                 URL obj = null;
                 try {
-                    obj = new URL("http://165.194.104.19:5000/setting_video");
+                    obj = new URL("http://165.194.17.4:5000/setting_video");
                     HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
                     //implement below code if token is send to server
@@ -486,7 +486,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void loadVideo() {
         videoView.getSettings().setJavaScriptEnabled(true);
-        videoView.loadUrl("http://165.194.104.19:8080/stream");
+        videoView.loadUrl("http://165.194.17.4:8080/stream");
         videoView.setKeepScreenOn(true);
 
         videoView.setInitialScale(1);
@@ -582,7 +582,7 @@ public class MainActivity extends AppCompatActivity {
 
                             URL obj = null;
                             try {
-                                obj = new URL("http://165.194.104.19:5000/gcm");
+                                obj = new URL("http://165.194.17.4:5000/gcm");
                                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
                                 //implement below code if token is send to server

@@ -64,29 +64,15 @@ public class LoginActivity extends AppCompatActivity {
                 userInputID = idEdit.getText().toString();
                 userInputPW = pwEdit.getText().toString();
 
-                UserSettingInfo.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
-                    @Override
-                    protected Boolean doInBackground(String... params) {
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Boolean aBoolean) {
-
-                        /** 서버통신, file I/O 대신 임시로 넣어줌 ㅎㅎㅎ 내일 짜죠 */
-                        UserSettingInfo.getInstance().setPhoneNumber("01093866983");
-                        UserSettingInfo.getInstance().setSerialNumber("RA-SP-BERRY-VERY-GOOD");
-                    }
-                });
-                UserSettingInfo.getInstance().execute();
 
 
+/*
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_MAIN);
                 finish();
+*/
 
 
-                /*
                 ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
 
                     @Override
@@ -94,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         URL obj = null;
                         try {
-                            obj = new URL("http://165.194.104.19:5000/login");
+                            obj = new URL("http://165.194.17.4:5000/login");
                             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
                             //implement below code if token is send to server
@@ -119,9 +105,25 @@ public class LoginActivity extends AppCompatActivity {
                                 ConnectServer.getInstance().setToken(token);
 
 
-
                                 isLoginPermitted = LOGIN_PERMITTED + "";
                                 Log.d("---- success ----", token);
+
+                                UserSettingInfo.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
+                                    @Override
+                                    protected Boolean doInBackground(String... params) {
+                                        return null;
+                                    }
+
+                                    @Override
+                                    protected void onPostExecute(Boolean aBoolean) {
+
+                                        /** 서버통신, file I/O 대신 임시로 넣어줌 ㅎㅎㅎ 내일 짜죠 */
+                                        UserSettingInfo.getInstance().setPhoneNumber("01093866983");
+                                        UserSettingInfo.getInstance().setSerialNumber("RA-SP-BERRY-VERY-GOOD");
+                                    }
+                                });
+                                UserSettingInfo.getInstance().execute();
+
                             } else {
                                 // 로그인 실패
                                 rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
@@ -151,7 +153,7 @@ public class LoginActivity extends AppCompatActivity {
                 });
 
                 ConnectServer.getInstance().execute();
-*/
+
 
             }
         });
