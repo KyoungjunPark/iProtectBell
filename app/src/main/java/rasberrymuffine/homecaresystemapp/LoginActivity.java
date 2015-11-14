@@ -57,10 +57,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        idEdit = (EditText)findViewById(R.id.idEdit);
-        pwEdit = (EditText)findViewById(R.id.pwEdit);
+        idEdit = (EditText) findViewById(R.id.idEdit);
+        pwEdit = (EditText) findViewById(R.id.pwEdit);
 
-        loginButton = (Button)findViewById(R.id.loginButton);
+        loginButton = (Button) findViewById(R.id.loginButton);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,31 +69,14 @@ public class LoginActivity extends AppCompatActivity {
                 userInputPW = pwEdit.getText().toString();
 
 
-                /** 서버 꺼져있는 상태에서 테스트 하려고 여기에 넣게된 코드*/
 
-                /* 여기부터 */
+/*
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_MAIN);
                 finish();
+*/
 
-                UserSettingInfo.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
-                    @Override
-                    protected Boolean doInBackground(String... params) {
-                        return null;
-                    }
 
-                    @Override
-                    protected void onPostExecute(Boolean aBoolean) {
-
-                        /** 서버통신, file I/O 대신 임시로 넣어줌 ㅎㅎㅎ 내일 짜죠 */
-                        UserSettingInfo.getInstance().setPhoneNumber("01093866983");
-                        UserSettingInfo.getInstance().setSerialNumber("RA-SP-BERRY-VERY-GOOD");
-                    }
-                });
-                UserSettingInfo.getInstance().execute();
-                /* 여기까지 */
-                /** 로그인 하려면 아래 주석 풀고, 이 코드 위치 바꿔줘야 함! */
-/*
                 ConnectServer.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
 
                     @Override
@@ -101,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         URL obj = null;
                         try {
-                            obj = new URL("http://165.194.104.19:5000/login");
+                            obj = new URL("http://165.194.17.4:5000/login");
                             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
                             //implement below code if token is send to server
@@ -125,15 +108,33 @@ public class LoginActivity extends AppCompatActivity {
                                 String token = rd.readLine();
                                 ConnectServer.getInstance().setToken(token);
 
-                                isLoginPermitted = LOGIN_PERMITTED+"";
+
+                                isLoginPermitted = LOGIN_PERMITTED + "";
                                 Log.d("---- success ----", token);
 
                                 createDatabase();
                                 setSettings();
+
+                                UserSettingInfo.getInstance().setAsncTask(new AsyncTask<String, Void, Boolean>() {
+                                    @Override
+                                    protected Boolean doInBackground(String... params) {
+                                        return null;
+                                    }
+
+                                    @Override
+                                    protected void onPostExecute(Boolean aBoolean) {
+
+                                        /** 서버통신, file I/O 대신 임시로 넣어줌 ㅎㅎㅎ 내일 짜죠 */
+                                        UserSettingInfo.getInstance().setPhoneNumber("01093866983");
+                                        UserSettingInfo.getInstance().setSerialNumber("RA-SP-BERRY-VERY-GOOD");
+                                    }
+                                });
+                                UserSettingInfo.getInstance().execute();
+
                             } else {
                                 // 로그인 실패
                                 rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
-                                isLoginPermitted= rd.readLine();
+                                isLoginPermitted = rd.readLine();
                                 Log.d("---- failed ----", String.valueOf(rd.readLine()));
                             }
                         } catch (IOException e) {
@@ -144,13 +145,11 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     protected void onPostExecute(Boolean aBoolean) {
-                        if (isLoginPermitted==LOGIN_PERMITTED+"") {
-
+                        if (isLoginPermitted == LOGIN_PERMITTED + "") {
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivityForResult(intent, REQUEST_CODE_MAIN);
                             finish();
-                        }
-                        else{
+                        } else {
                             AlertDialog dialog = createDialogBox(isLoginPermitted);
                             dialog.show();
                             idEdit.setText("");
@@ -163,10 +162,9 @@ public class LoginActivity extends AppCompatActivity {
                 ConnectServer.getInstance().execute();
 
 
-                */
             }
         });
-        joinButton = (Button)findViewById(R.id.joinButton);
+        joinButton = (Button) findViewById(R.id.joinButton);
         joinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -176,7 +174,6 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
 
 
     }
@@ -228,6 +225,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

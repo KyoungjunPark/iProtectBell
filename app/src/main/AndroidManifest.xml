@@ -78,5 +78,13 @@
             android:name="rasberrymuffine.homecaresystemapp.RegistrationIntentService"
             android:exported="false"></service>
         <!-- [END gcm_registration_service] -->
+        <receiver
+            android:name=".AutoExecution"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="EXECUTION"></action>
+                </intent-filter>
+        </receiver>
     </application>
 </manifest>

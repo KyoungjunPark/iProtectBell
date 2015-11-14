@@ -60,7 +60,7 @@ public class JoinActivity_Administrator extends AppCompatActivity {
 
                         URL obj = null;
                         try {
-                            obj = new URL("http://165.194.104.19:5000/join");
+                            obj = new URL("http://165.194.17.4:5000/join");
 
                             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                             con.setRequestProperty("Accept-Language", "ko-kr,ko;q=0.8,en-us;q=0.5,en;q=0.3");
