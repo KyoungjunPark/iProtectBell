@@ -16,8 +16,8 @@ public class UserSettingInfo {
 
     private static final UserSettingInfo instance = new UserSettingInfo();
 
-    UserSettingInfo() {
-
+    public UserSettingInfo() {
+        this.alarmType = "pushalarm";
     }
 
     public static UserSettingInfo getInstance() {

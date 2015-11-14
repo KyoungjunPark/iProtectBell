@@ -32,9 +32,9 @@ public class MyGcmListenerService extends GcmListenerService{
         UserSettingInfo Sinfo = new UserSettingInfo();
 
         if(Sinfo.getAlarmType()=="pushalarm"){
-        sendNotification(title, message);
-        AlertDialog dialog = createDialogBox();
-        dialog.show();
+            sendNotification(title, message);
+            //AlertDialog dialog = createDialogBox();
+            //dialog.show();
         }
         else if(Sinfo.getAlarmType()=="execution"){
             sendNotification(title, message);
