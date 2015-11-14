@@ -3,6 +3,8 @@ package rasberrymuffine.homecaresystemapp;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,13 +41,15 @@ public class LoginActivity extends AppCompatActivity {
     private EditText pwEdit;
     private String userInputID;
     private String userInputPW;
+    private String userSerialNumber;
 
     private Button loginButton;
     private Button joinButton;
 
     private String isLoginPermitted;
 
-  //  private UserSettingInfo userSettingInfo;
+    private UserSettingInfo userSettingInfo;
+    private SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +127,9 @@ public class LoginActivity extends AppCompatActivity {
 
                                 isLoginPermitted = LOGIN_PERMITTED+"";
                                 Log.d("---- success ----", token);
+
+                                createDatabase();
+                                setSettings();
                             } else {
                                 // 로그인 실패
                                 rd = new BufferedReader(new InputStreamReader(con.getErrorStream(), "UTF-8"));
@@ -173,7 +180,50 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
-  
+
+    private void createDatabase() {
+        try {
+            db = openOrCreateDatabase("bellSetting", MODE_WORLD_READABLE, null);
+            createSettingTable();
+            //databaseCreated = true;
+            Log.d("database", "-----created-----");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Log.e("database", "-----not created-----");
+        }
+    }
+
+    private void createSettingTable() {
+        db.execSQL("create table setting ("
+                + "ID text, "
+                + "serial_number text, "
+                + "phone_number text, "
+                + "alarm_type text);");
+    }
+
+    private void setSettings() {
+        Cursor c1 = db.rawQuery("select * from bellSetting where ID='" + userInputID + "'", null);
+        if(c1.getCount() == 0) {
+            UserSettingInfo.getInstance().setID(userInputID);
+            UserSettingInfo.getInstance().setSerialNumber(userSerialNumber);
+            UserSettingInfo.getInstance().setPhoneNumber("01093866983");
+            UserSettingInfo.getInstance().setAlarmType("0");
+            db.execSQL("insert into setting (ID, serial_number, phone_number, alarm_type) values ("
+                    + "'" + UserSettingInfo.getInstance().getID() + "', '"
+                    + UserSettingInfo.getInstance().getSerialNumber() + "', '"
+                    + UserSettingInfo.getInstance().getPhoneNumber() + "', '"
+                    + UserSettingInfo.getInstance().getAlarmType() + "');");
+
+        }
+        else {
+            UserSettingInfo.getInstance().setID(c1.getString(0));
+            UserSettingInfo.getInstance().setSerialNumber(c1.getString(1));
+            UserSettingInfo.getInstance().setPhoneNumber(c1.getString(2));
+            UserSettingInfo.getInstance().setAlarmType(c1.getString(3));
+        }
+        c1.close();
+    }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);

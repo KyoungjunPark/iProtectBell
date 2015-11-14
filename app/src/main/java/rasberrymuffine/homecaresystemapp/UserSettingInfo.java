@@ -9,6 +9,7 @@ import android.util.Log;
 public class UserSettingInfo {
     private AsyncTask<String, Void, Boolean> task;
 
+    private String ID;
     private String phoneNumber;
     private String serialNumber;
     private String alarmType;
@@ -31,6 +32,10 @@ public class UserSettingInfo {
         this.task.execute();
     }
 
+    public void setID(String id) {
+        this.ID = id;
+    }
+
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
         Log.d("---- set number ----", this.phoneNumber);
@@ -42,6 +47,10 @@ public class UserSettingInfo {
 
     public void setAlarmType(String alarmType) {
         this.alarmType = alarmType;
+    }
+
+    public String getID() {
+        return ID;
     }
 
     public String getPhoneNumber() {

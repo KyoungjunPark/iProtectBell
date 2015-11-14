@@ -87,8 +87,6 @@
             android:layout_marginTop="10dp"
             android:layout_centerHorizontal="true"
             android:textColor="#FFd0a400"/>
-
-
     </RelativeLayout>
     <SlidingDrawer
         android:id="@+id/slide_menu"
