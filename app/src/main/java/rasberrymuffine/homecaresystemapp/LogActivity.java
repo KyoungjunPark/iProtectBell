@@ -44,7 +44,7 @@ public class LogActivity extends Activity {
             @Override
             protected Boolean doInBackground(String... params) {
                 try {
-                    URL url = new URL("http://165.194.17.4:5000/log");
+                    URL url = new URL("http://165.194.9.60:5000/log");
 
                     HttpURLConnection con = (HttpURLConnection) url.openConnection();
                     con = ConnectServer.getInstance().setHeader(con);

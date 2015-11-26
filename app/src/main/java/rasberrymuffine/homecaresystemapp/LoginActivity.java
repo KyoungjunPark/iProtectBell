@@ -84,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         URL obj = null;
                         try {
-                            obj = new URL("http://165.194.17.4:5000/login");
+                            obj = new URL("http://165.194.9.60:5000/login");
                             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
                             //implement below code if token is send to server

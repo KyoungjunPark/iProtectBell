@@ -22,7 +22,7 @@ public class FullscreenActivity extends Activity {
 
         web = (WebView) findViewById(R.id.fullScreenView);
         web.getSettings().setJavaScriptEnabled(true);
-        web.loadUrl("http://165.194.17.4:8080/stream");
+        web.loadUrl("http://165.194.9.60:8080/stream");
         web.setWebViewClient(new WebViewClient());
         web.setInitialScale(1);
         web.setPadding(0, 0, 0, 0);
